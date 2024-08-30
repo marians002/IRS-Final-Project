@@ -1,8 +1,8 @@
 # Objetivo
 
 - Crear un sistema hibrido con filtrado colaborativo y por items
-- Incorporar start call
-- Incorporar vecinos lejanos
+- Incorporar cold call
+- Incorporar vecinos lejanos (requiere distancia entre items)
 
 ## Tareas
 
@@ -13,3 +13,19 @@
 - Desafíos?
 - Implementar métricas y ejemplos de la solución propuesta
 - Documentar todo el código
+- Crear el informe
+
+## Cosas
+
+- Estrategias para crear sistemas hibridos (tipos de sistemas):
+  - Weighted Hybrid
+    - Elegir algoritmos a utilizar.
+    - Asignar pesos según relevancia.
+  - Mixed Hybrid (luego)
+- Estrategias de recomendación:
+  - Filtrado Colaborativo
+  - Filtrado basado en contenido: KNN
+  - Filtrado basado en conocimiento
+- Elegir un algoritmo basado en recomendaciones por contenido (items)
+- Elegir un algoritmo de recomendación colaborativo
+- Añadir al pipeline las diferentes combinaciones
