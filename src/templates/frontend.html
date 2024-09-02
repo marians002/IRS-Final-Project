@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recommender System</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <header>
+        <input type="text" class="search-bar" placeholder="Search for movies...">
+        <svg class="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <div id="logout-container" style="display: none;">
+            <p id="current-user-name"></p>
+            <button id="logout-button" onclick="logout()">Close Session</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="main-title">Movie Ocean</h1>
+        <button class='get_recom_but' onclick="getRecommendations()">Get Recommendations</button>
+        <ul id="recommendations" style="display: none;"></ul>
+    </div>
+
+    <div class="recommendations">
+        <div class="column">
+            <h2>Top Picks</h2>
+            <ul>
+                <li>The Deep Blue</li>
+                <li>Ocean's Eleven</li>
+                <li>Finding Nemo</li>
+                <li>Aquaman</li>
+                <li>20,000 Leagues Under the Sea</li>
+            </ul>
+        </div>
+        <div class="column">
+            <h2>New Releases</h2>
+            <ul>
+                <li>Atlantis Rising</li>
+                <li>The Lighthouse</li>
+                <li>Sea of Shadows</li>
+                <li>Blue Planet III</li>
+                <li>Poseidon's Fury</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        document.querySelector('.user-icon').addEventListener('click', function() {
+            if (!currentUser) {
+                // const users = ['Alice', 'Bob', 'Charlie', 'Diana'];
+                currentUser = prompt('Select a user: ');
+                if (currentUser) {
+                    document.querySelector('.user-icon').style.display = 'none';
+                    document.getElementById('logout-container').style.display = 'flex';
+                    document.getElementById('logout-container').style.width = '15%';
+                    document.getElementById('current-user-name').textContent = currentUser;
+                    document.getElementById('recommendations').style.display = 'block';
+                    alert(`Welcome, ${currentUser}! Your personalized recommendations are now loaded.`);
+                } else {
+                    alert('Invalid user selection. Please try again.');
+                    currentUser = null;
+                }
+            }
+        });
+
+        function logout() {
+            currentUser = null;
+            document.querySelector('.user-icon').style.display = 'inline';
+            document.getElementById('logout-container').style.display = 'none';
+            document.getElementById('recommendations').style.display = 'none';
+            document.getElementById('recommendations').innerHTML = '';
+            alert('You have been logged out.');
+        }
+
+        async function getRecommendations() {
+            if (!currentUser) {
+                alert('No user is logged in. Please select a user.');
+                return;
+            }
+
+            const response = await fetch('/recommend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user: currentUser })
+            });
+            const recommendations = await response.json();
+            console.log(recommendations); // Log the response to check its structure
+
+            const list = document.getElementById('recommendations');
+            list.innerHTML = '';
+            recommendations.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                list.appendChild(li);
+            });
+        }
+
+        document.querySelector('.search-bar').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value;
+                alert(`Searching for "${searchTerm}"... Feature coming soon!`);
+                this.value = '';
+            }
+        });
+
+        // Add a subtle animation to the recommendation lists
+        const listItems = document.querySelectorAll('li');
+        listItems.forEach((item, index) => {
+            item.style.animation = `fadeIn 0.5s ease-out ${index * 0.1}s both`;
+        });
+
+        // Add this CSS animation to your existing <style> tag
+        document.querySelector('style').textContent += `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+    </script>
+</body>
+</html>
