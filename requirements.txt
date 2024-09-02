@@ -1,0 +1,4 @@
+Para ejecutar el código proporcionado, necesitas instalar las siguientes librerías de Python:
+    NumPy: Utilizada para operaciones matemáticas y manejo de arrays.
+    Matplotlib: Necesaria para la creación de gráficos y visualizaciones.
+    Cornac: Una biblioteca para la evaluación y comparación de modelos de recomendación.
