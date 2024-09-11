@@ -27,27 +27,27 @@
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{Carlos A. Bresó Sotto\inst{1}\orcidID{0000-1111-2222-3333} \and
-Marian S. Álvarez Suri\inst{2,3}\orcidID{1111-2222-3333-4444}}
+\author{Carlos A. Bresó Sotto \\
+Marian S. Álvarez Suri}
 %
 \authorrunning{F. Author et al.}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
-\institute{Facultad de Matemática y Computación, Universidad de La Habana, La Habana}
+\institute{Facultad de Matemática y Computación \\ Universidad de La Habana, La Habana}
 %
 \maketitle              
 %
 \begin{abstract}    
-    En el ámbito de los sistemas de recomendación, los enfoques híbridos han demostrado ser altamente efectivos al combinar las fortalezas de múltiples técnicas de recomendación. Este trabajo presenta un sistema de recomendación híbrido que integra métodos basados en contenido y filtrado colaborativo para mejorar la precisión y relevancia de las recomendaciones. El sistema propuesto utiliza un modelo de filtrado colaborativo para capturar las preferencias de los usuarios a partir de sus interacciones pasadas, mientras que el enfoque basado en contenido analiza las características intrínsecas de los ítems para ofrecer recomendaciones personalizadas. La combinación de estos métodos se realiza mediante un esquema de ponderación adaptativa que ajusta dinámicamente la contribución de cada técnica según el contexto y el perfil del usuario. Los resultados experimentales muestran que el sistema híbrido supera a los enfoques individuales en términos de precisión y satisfacción del usuario, destacando su potencial para aplicaciones en diversas áreas como el comercio electrónico, la recomendación de películas y la educación en línea.
+    En el ámbito de los sistemas de recomendación, los enfoques híbridos han demostrado ser altamente efectivos al combinar las fortalezas de múltiples técnicas de recomendación. Este trabajo presenta un sistema de recomendación híbrido que integra métodos basados en contenido y filtrado colaborativo para mejorar la precisión y relevancia de las recomendaciones. El sistema propuesto utiliza un modelo de filtrado colaborativo para capturar las preferencias de los usuarios a partir de sus interacciones pasadas, mientras que el enfoque basado en contenido analiza las características intrínsecas de los ítems para ofrecer recomendaciones personalizadas. La combinación de estos métodos se realiza mediante un esquema de ponderación adaptativa que ajusta la contribución de cada técnica según el contexto y el perfil del usuario. Los resultados experimentales muestran que el sistema híbrido supera a los enfoques individuales en términos de precisión y satisfacción del usuario, destacando su potencial para aplicaciones en diversas áreas como el comercio electrónico, la recomendación de películas y la educación en línea.
     
 
-\keywords{First keyword  \and Second keyword \and Another keyword.}
+\keywords{Sistema de Recomendación Híbrido \and filtrado colaborativo \and filtrado basado en contenido.}
 \end{abstract}
 %
 %
 %
-\section{First Section}
+\section{Introducción}
 \subsection{A Subsection Sample}
 Please note that the first paragraph of a section or subsection is
 not indented. The first paragraph that follows a table, figure,
@@ -61,23 +61,8 @@ they are formatted as run-in headings.
 
 \paragraph{Sample Heading (Fourth Level)}
 The contribution should contain no more than four levels of
-headings. Table~\ref{tab1} gives a summary of all heading levels.
+headings. gives a summary of all heading levels.
 
-\begin{table}
-\caption{Table captions should be placed above the
-tables.}\label{tab1}
-\begin{tabular}{|l|l|l|}
-\hline
-Heading level &  Example & Font size and style\\
-\hline
-Title (centered) &  {\Large\bfseries Lecture Notes} & 14 point, bold\\
-1st-level heading &  {\large\bfseries 1 Introduction} & 12 point, bold\\
-2nd-level heading & {\bfseries 2.1 Printing Area} & 10 point, bold\\
-3rd-level heading & {\bfseries Run-in Heading in Bold.} Text follows & 10 point, bold\\
-4th-level heading & {\itshape Lowest Level Heading.} Text follows & 10 point, italic\\
-\hline
-\end{tabular}
-\end{table}
 
 
 \noindent Displayed equations are centered and set on a separate
@@ -90,7 +75,6 @@ schemas. Whenever possible, use vector graphics instead (see
 Fig.~\ref{fig1}).
 
 \begin{figure}
-\includegraphics[width=\textwidth]{fig1.eps}
 \caption{A figure caption is always placed below the illustration.
 Please note that short captions are centered, while long ones are
 justified by the macro package automatically.} \label{fig1}
@@ -146,22 +130,7 @@ Company X and owns stock in Company Y. Author C is a member of committee Z.
 %
 \begin{thebibliography}{8}
 \bibitem{ref_article1}
-Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
+Erion Cano, Maurizio Morisio: Hybrid Recommender Systems: A Systematic Literature Review. Department of Control and Computer Engineering, Politecnico di Torino, Corso Duca degli Abruzzi, 24 - 10129 Torino
 
-\bibitem{ref_lncs1}
-Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-Springer, Heidelberg (2016). \doi{10.10007/1234567890}
-
-\bibitem{ref_book1}
-Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-Location (1999)
-
-\bibitem{ref_proc1}
-Author, A.-B.: Contribution title. In: 9th International Proceedings
-on Proceedings, pp. 1--2. Publisher, Location (2010)
-
-\bibitem{ref_url1}
-LNCS Homepage, \url{http://www.springer.com/lncs}, last accessed 2023/10/25
 \end{thebibliography}
 \end{document}
