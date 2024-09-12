@@ -11,7 +11,6 @@ name_to_id = None
 def initialize_name_to_id():
     global name_to_id
     if name_to_id is None:
-        print('Here')
         name_to_id = map_names_to_ids()
 
 
