@@ -9,19 +9,33 @@ name_to_id = None
 
 
 def initialize_name_to_id():
+    """
+    Initializes the global name-to-ID mapping if it is not already initialized.
+    """
     global name_to_id
     if name_to_id is None:
-        print('Here')
         name_to_id = map_names_to_ids()
 
 
 @app.route('/', methods=['GET'])
 def index():
+    """
+    Renders the frontend HTML page.
+
+    Returns:
+        str: Rendered HTML template for the frontend.
+    """
     return render_template('frontend.html')
 
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
+    """
+    Handles the recommendation request. Expects a JSON payload with a 'user' field.
+
+    Returns:
+        Response: JSON response containing recommendations or an error message.
+    """
     initialize_name_to_id()  # Ensure the name-to-ID mapping is initialized
     data = request.json
     user_name = data.get('user')
