@@ -145,14 +145,13 @@ Estas métricas fueron elegidas para proporcionar una evaluación comprensiva de
     
 
     \subsection{Diversidad}
-    Aunque la diversidad no se mide directamente, podemos inferir que un sistema con alta precisión y recall probablemente esté recomendando una gama más amplia de ítems relevantes. El sistema híbrido, al tener la Precision@10 más alta y un Recall@10 competitivo, sugiere que no solo está recomendando ítems relevantes sino que también está cubriendo una buena parte de los ítems relevantes disponibles. Esto podría interpretarse como una indicación de diversidad en las recomendaciones, especialmente en comparación con sistemas que tienen un recall más bajo.
-
+    En el análisis de la métrica de novedad, empleada para medir la diversidad en nuestro sistema de recomendación, observamos resultados significativos que reflejan la capacidad de cada modelo para introducir ítems novedosos a los usuarios. La puntuación media de novedad para el modelo MF fue de 0.02052, mientras que para el modelo BPR fue notablemente baja, con un valor de 0.00254, indicando una menor tendencia a recomendar ítems menos conocidos. Por otro lado, el modelo SVD mostró una mejora en la novedad con una puntuación de 0.02707. Sin embargo, es en los modelos ItemKNN y Hybrid donde vemos un salto significativo en la capacidad de ofrecer recomendaciones novedosas, con puntuaciones de 0.26961 y 0.32069, respectivamente. Estos resultados sugieren que, mientras los modelos MF, BPR y SVD pueden tener un enfoque más conservador, centrado en la precisión de las recomendaciones, los modelos ItemKNN y especialmente el sistema híbrido se destacan por su habilidad para explorar y recomendar una gama más amplia y diversa de ítems.
 
     \subsection{Comparación con Otros Sistemas}
 
     \begin{itemize}
-        \item Contra MF y SVD: Aunque el sistema híbrido no supera a MF y SVD en términos de MAE y RMSE, sí ofrece mejores resultados en Precision@10. Esto sugiere que, aunque MF y SVD pueden ser más precisos en predecir las calificaciones, el sistema híbrido es más efectivo en identificar ítems relevantes para incluir en las top-10 recomendaciones.
-        \item Contra BPR e ItemKNN: El sistema híbrido supera claramente a BPR y ItemKNN en todas las métricas de precisión consideradas. Esto indica que el sistema híbrido no solo es más preciso en sus predicciones sino también en la relevancia de sus recomendaciones.
+        \item Contra MF y SVD: Aunque el sistema híbrido no supera a MF y SVD en términos de MAE y RMSE, sí ofrece mejores resultados en Precision@10 y en la métrica de novedad. Esto sugiere que, aunque MF y SVD pueden ser más precisos en predecir las calificaciones, el sistema híbrido es más efectivo en identificar ítems relevantes para incluir en las top-10 recomendaciones y en promover una mayor diversidad en las recomendaciones a través de ítems novedosos.
+        \item Contra BPR e ItemKNN: El sistema híbrido supera claramente a BPR y ItemKNN en todas las métricas de precisión consideradas, así como en la métrica de novedad. Esto indica que el sistema híbrido no solo es más preciso en sus predicciones y en la relevancia de sus recomendaciones, sino que también sobresale en ofrecer recomendaciones más diversas y novedosas, enriqueciendo la experiencia del usuario con una variedad más amplia de ítems.
     \end{itemize}
         
 \chapter{Conclusiones y Trabajo Futuro}
