@@ -73,12 +73,23 @@ Marian S. Álvarez Suri}
         \subsection{Combinación de Características}
 En este método, las características de las fuentes de datos de varias técnicas de recomendación se combinan en un único algoritmo de recomendación. Esto permite aprovechar la información de diferentes fuentes para generar recomendaciones más precisas.
 \chapter{Metodología}
-    \section{Descripción del Sistema}
-    \section{Datos Utilizados}
-    \section{Implementación}
-        \subsection{Algoritmos Utilizados}
-        \subsection{Integración de Técnicas}
+\section{Descripción del Sistema}
+El sistema desarrollado es un recomendador híbrido que combina múltiples modelos de recomendación con pesos específicos. Este sistema se encarga de generar recomendaciones personalizadas para los usuarios basándose en sus interacciones previas con los ítems.
 
+\section{Datos Utilizados}
+Se utiliza el conjunto de datos MovieLens 100K, que contiene 100,000 calificaciones de películas realizadas por 943 usuarios sobre 1682 películas. Este conjunto de datos incluye información sobre las películas, como títulos, géneros y fechas de lanzamiento, así como las calificaciones otorgadas por los usuarios \cite{movielens}.
+
+\section{Implementación}
+\subsection{Algoritmos Utilizados}
+Se tomaron los siguientes algoritmos de recomendación de la librería cornac \cite{cornac} para implementar el sistema híbrido:
+\begin{itemize}
+    \item SVD (Singular Value Decomposition): Un modelo de factorización de matrices que descompone la matriz de calificaciones en matrices de características latentes.
+    \item ItemKNN (Item-based K-Nearest Neighbors): Un modelo basado en la similitud entre ítems, utilizando la similitud coseno.
+    \item BPR (Bayesian Personalized Ranking): Un modelo de optimización para el ranking personalizado basado en la probabilidad bayesiana.
+\end{itemize}
+
+\subsection{Integración de Técnicas}
+El sistema híbrido combina los modelos mencionados utilizando un esquema de ponderación. Los pesos asignados a cada modelo son (6, 3, 1) para SVD, BPR y ItemKNN, respectivamente. Además, se calcula la similitud entre las películas basándose en sus géneros utilizando la similitud de coseno. Esta información de similitud se utiliza para mejorar las recomendaciones, añadiendo películas no tan similares a la última película que el usuario calificó con el objetivo de lograr mayor diversidad de las recomendaciones.
 \chapter{Resultados y Discusión}
     \section{Evaluación del Sistema}
         \subsection{Métricas de Evaluación}
