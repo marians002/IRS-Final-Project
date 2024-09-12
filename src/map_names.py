@@ -2,6 +2,16 @@ import os
 
 
 def map_names_to_ids(file_path=None):
+    """
+    Maps names from a file to unique IDs.
+
+    Args:
+        file_path (str, optional): The path to the file containing names.
+                                   If None, defaults to 'sample_names.txt' in the current script's directory.
+
+    Returns:
+        dict: A dictionary mapping names to unique IDs.
+    """
     if file_path is None:
         # Get the directory of the current script
         script_dir = os.path.dirname(__file__)
@@ -14,7 +24,7 @@ def map_names_to_ids(file_path=None):
     # Remove any leading/trailing whitespace characters (like newlines)
     names = [name.strip() for name in names]
 
-    # Create a dictionary mapping names to IDs (Angelica Powers: 1)
-    name_to_id = {name: i+1 for i, name in enumerate(names)}
+    # Create a dictionary mapping names to IDs (e.g., Angelica Powers: 1)
+    name_to_id = {name: i + 1 for i, name in enumerate(names)}
 
     return name_to_id
