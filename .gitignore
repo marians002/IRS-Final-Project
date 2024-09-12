@@ -1,4 +1,11 @@
 *.log
 .idea
 .venv
+*.aux
+*.bbl
+*.fls
+*.synctex.gz
+*.toc
+*.blg
+*.fdb_latexmk
 /src/__pycache__

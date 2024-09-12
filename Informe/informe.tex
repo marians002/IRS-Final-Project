@@ -1,136 +1,106 @@
-% This is samplepaper.tex, a sample chapter demonstrating the
-% LLNCS macro package for Springer Computer Science proceedings;
-% Version 2.21 of 2022/01/12
-%
-\documentclass[runningheads]{llncs}
-%
-\usepackage[T1]{fontenc}
-% T1 fonts will be used to generate the final print and online PDFs,
-% so please use T1 fonts in your manuscript whenever possible.
-% Other font encondings may result in incorrect characters.
-%
+\documentclass[a4paper,12pt]{report}
+\usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-% Used for displaying a sample figure. If possible, figure files should
-% be included in EPS format.
-%
-% If you use the hyperref package, please uncomment the following two lines
-% to display URLs in blue roman font according to Springer's eBook style:
-%\usepackage{color}
-%\renewcommand\UrlFont{\color{blue}\rmfamily}
-%\urlstyle{rm}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{bookmark}
+
 %
 \begin{document}
-%
 \title{Sistema de Recomendación Híbrido}
-%
-%\titlerunning{Abbreviated paper title}
-% If the paper title is too long for the running head, you can set
-% an abbreviated paper title here
-%
 \author{Carlos A. Bresó Sotto \\
 Marian S. Álvarez Suri}
-%
-\authorrunning{F. Author et al.}
-% First names are abbreviated in the running head.
-% If there are more than two authors, 'et al.' is used.
-%
-\institute{Facultad de Matemática y Computación \\ Universidad de La Habana, La Habana}
-%
-\maketitle              
-%
-\begin{abstract}    
+
+\urldef{\repo}\url{https://github.com/marians002/IRS-Final-Project.git}
+
+\date{Facultad de Matemática y Computación \\ 
+           Universidad de La Habana, La Habana 
+           \\ \repo}
+
+\maketitle
+
+\begin{abstract}
     En el ámbito de los sistemas de recomendación, los enfoques híbridos han demostrado ser altamente efectivos al combinar las fortalezas de múltiples técnicas de recomendación. Este trabajo presenta un sistema de recomendación híbrido que integra métodos basados en contenido y filtrado colaborativo para mejorar la precisión y relevancia de las recomendaciones. El sistema propuesto utiliza un modelo de filtrado colaborativo para capturar las preferencias de los usuarios a partir de sus interacciones pasadas, mientras que el enfoque basado en contenido analiza las características intrínsecas de los ítems para ofrecer recomendaciones personalizadas. La combinación de estos métodos se realiza mediante un esquema de ponderación adaptativa que ajusta la contribución de cada técnica según el contexto y el perfil del usuario. Los resultados experimentales muestran que el sistema híbrido supera a los enfoques individuales en términos de precisión y satisfacción del usuario, destacando su potencial para aplicaciones en diversas áreas como el comercio electrónico, la recomendación de películas y la educación en línea.
-    
-
-\keywords{Sistema de Recomendación Híbrido \and filtrado colaborativo \and filtrado basado en contenido.}
+\\
+\\
+    \textbf{Keywords}: Sistema de Recomendación Híbrido, filtrado colaborativo, filtrado basado en contenido.
 \end{abstract}
-%
-%
-%
-\section{Introducción}
-\subsection{A Subsection Sample}
-Please note that the first paragraph of a section or subsection is
-not indented. The first paragraph that follows a table, figure,
-equation etc. does not need an indent, either.
 
-Subsequent paragraphs, however, are indented.
+\tableofcontents
 
-\subsubsection{Sample Heading (Third Level)} Only two levels of
-headings should be numbered. Lower level headings remain unnumbered;
-they are formatted as run-in headings.
+\chapter{Introducción}
+\section{Motivación}
 
-\paragraph{Sample Heading (Fourth Level)}
-The contribution should contain no more than four levels of
-headings. gives a summary of all heading levels.
+Los sistemas de recomendación han emergido como uno de los pilares fundamentales en la estrategia digital de las grandes compañías a nivel mundial, transformándose en herramientas indispensables para mejorar la experiencia del usuario y maximizar la eficiencia de los servicios en línea. Empresas líderes en el sector tecnológico, como Amazon, Netflix y Spotify, han adoptado estos sistemas para ofrecer a sus usuarios recomendaciones personalizadas, lo que no solo incrementa la satisfacción y fidelidad del cliente, sino que también impulsa significativamente las ventas y el compromiso. La capacidad de estos sistemas para analizar grandes volúmenes de datos en tiempo real y predecir las preferencias de los usuarios con alta precisión les permite a las compañías estar un paso adelante, asegurando una oferta más ajustada a las necesidades y gustos de su audiencia. En un mundo cada vez más saturado de información y opciones, los sistemas de recomendación se han convertido en una herramienta clave para filtrar y personalizar el contenido, demostrando ser un recurso valioso para mantener la competitividad y liderazgo de las grandes empresas en el mercado global.
+
+El proyecto en cuestión aborda la creación de un sistema de recomendación híbrido, una solución innovadora que combina las fortalezas del filtrado colaborativo y el filtrado basado en contenido para superar las limitaciones inherentes a cada uno de estos enfoques por separado. El filtrado colaborativo aprovecha las interacciones y preferencias de los usuarios para hacer recomendaciones, basándose en la premisa de que aquellos con gustos similares en el pasado tendrán intereses parecidos en el futuro. Por otro lado, el filtrado basado en contenido se centra en las características de los ítems para hacer recomendaciones, lo que permite una personalización más detallada, pero puede limitar la diversidad de las recomendaciones y reforzar la cámara de eco.
+Al integrar ambos enfoques, nuestra propuesta no solo mejora la precisión de las recomendaciones, sino que también enriquece la experiencia del usuario al ofrecer una variedad más amplia y relevante de opciones.
+
+\section{Objetivos}
+
+Nuestro trabajo se distingue de otros en el campo de los sistemas de recomendación por la incorporación de un enfoque innovador que mejora la diversidad de los elementos recomendados. A diferencia de los métodos tradicionales que se centran únicamente en las preferencias explícitas del usuario, hemos añadido un conjunto de recomendaciones que no se encuentran entre las preferidas por este. Dicha estrategia no solo enriquece la experiencia del usuario al introducirle nuevos y variados contenidos, sino que también mitiga el problema de la homogeneidad en las recomendaciones, fomentando así una exploración más amplia de las opciones disponibles. 
+
+El objetivo general de este trabajo es desarrollar un sistema de recomendación híbrido para películas que no solo se base en las preferencias explícitas del usuario, sino que también incorpore elementos que podrían resultar atractivos a pesar de su diferencia con el historial previo o con los gustos de personas con intereses similares. Esta estrategia busca enriquecer la diversidad de las recomendaciones cinematográficas, permitiendo descubrir nuevas películas y opciones que de otro modo podrían pasar desapercibidas.
 
 
+\section{Estructura del Informe}
 
-\noindent Displayed equations are centered and set on a separate
-line.
-\begin{equation}
-x + y = z
-\end{equation}
-Please try to avoid rasterized images for line-art diagrams and
-schemas. Whenever possible, use vector graphics instead (see
-Fig.~\ref{fig1}).
+\chapter{Estado del Arte}
+\section{Sistemas de Recomendación}
+En el ámbito de los sistemas de recomendación híbridos, el estado del arte ha evolucionado significativamente, reflejando un creciente interés en superar las limitaciones de los enfoques tradicionales mediante la integración de múltiples métodos de recomendación. Según el análisis presentado en \cite{hybridRecommenderSystemReview}, los sistemas de recomendación híbridos ofrecen una solución efectiva para superar las limitaciones de los sistemas basados únicamente en filtrado colaborativo o contenido, pues han demostrado ser especialmente eficaces en abordar problemas como el arranque frío y la escasez de datos, ofreciendo recomendaciones más precisas y personalizadas. Los estudios destacan la diversidad de técnicas utilizadas para combinar diferentes enfoques, desde métodos ponderados hasta la fusión de características, mostrando una tendencia hacia la experimentación y la innovación en el campo \cite{recommendationModelsTourism} . 
+Existen varias formas de combinar estos métodos, entre las cuales destacan:
+\begin{enumerate}
+    \item Ponderación de Pesos 
+    \item Mezcla de Modelos
+    \item Sistema Híbrido Alternante
+    \item Combinación de Características
+    
+\end{enumerate}
 
-\begin{figure}
-\caption{A figure caption is always placed below the illustration.
-Please note that short captions are centered, while long ones are
-justified by the macro package automatically.} \label{fig1}
-\end{figure}
 
-\begin{theorem}
-This is a sample theorem. The run-in heading is set in bold, while
-the following text appears in italics. Definitions, lemmas,
-propositions, and corollaries are styled the same way.
-\end{theorem}
-%
-% the environments 'definition', 'lemma', 'proposition', 'corollary',
-% 'remark', and 'example' are defined in the LLNCS documentclass as well.
-%
-\begin{proof}
-Proofs, examples, and remarks have the initial word in italics,
-while the following text appears in normal font.
-\end{proof}
-For citations of references, we prefer the use of square brackets
-and consecutive numbers. Citations using labels or the author/year
-convention are also acceptable. The following bibliography provides
-a sample reference list with entries for journal
-articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
-book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
-and a homepage~\cite{ref_url1}. Multiple citations are grouped
-\cite{ref_article1,ref_lncs1,ref_book1},
-\cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
+Estas revisiones sistemáticas subrayan la importancia de los sistemas de recomendación híbridos en el panorama actual, identificando áreas clave para la investigación futura, como la mejora de los algoritmos de fusión y la exploración de nuevas fuentes de datos para enriquecer las recomendaciones. La continua evolución de estos sistemas promete no solo mejorar la experiencia del usuario en plataformas digitales, sino también abrir nuevas vías para el avance tecnológico en la inteligencia artificial y el análisis de datos \cite{systematicReviewRecommenderSystems}.
 
-\begin{credits}
-\subsubsection{\ackname} A bold run-in heading in small font size at the end of the paper is
-used for general acknowledgments, for example: This study was funded
-by X (grant number Y).
+\subsection{Filtrado Colaborativo}
+\subsection{Filtrado Basado en Contenido}
+\subsection{Sistemas de Recomendación Híbridos}
+\section{Métodos de Hibridación}
+\subsection{Ponderación de Pesos}
+En este enfoque, las recomendaciones de diferentes sistemas se combinan asignando un peso a cada una de ellas. La importancia o puntuación de cada producto se calcula a partir de los resultados obtenidos por todas las técnicas de recomendación presentes en el sistema. Un ejemplo de este tipo de hibridación es el sistema P-Tango \cite{recommendationModelsTourism}, que ajusta los pesos de acuerdo con las opiniones de los usuarios sobre los resultados mostrados.
+\subsection{Mezcla de Modelos}
+En este método, las recomendaciones provenientes de varias técnicas de recomendación se muestran al mismo tiempo. Esto permite que el usuario vea una combinación de recomendaciones basadas en diferentes enfoques, lo que puede mejorar la diversidad y la calidad de las recomendaciones.
+\subsection{Sistema Híbrido Alternante}
+Este enfoque utiliza criterios específicos para alternar entre diferentes técnicas de recomendación. Por ejemplo, primero se emplean técnicas basadas en contenido y, si no se obtienen buenos resultados, el sistema cambia a filtrado colaborativo. Esto permite que las recomendaciones sean sensibles a las fortalezas y debilidades de cada método \cite{knowledgeDiscoveryMethodology}.
+\subsection{Combinación de Características}
+En este método, las características de las fuentes de datos de varias técnicas de recomendación se combinan en un único algoritmo de recomendación. Esto permite aprovechar la información de diferentes fuentes para generar recomendaciones más precisas.
+\chapter{Metodología}
+\section{Descripción del Sistema}
+\section{Datos Utilizados}
+\section{Implementación}
+\subsection{Algoritmos Utilizados}
+\subsection{Integración de Técnicas}
 
-\subsubsection{\discintname}
-It is now necessary to declare any competing interests or to specifically
-state that the authors have no competing interests. Please place the
-statement with a bold run-in heading in small font size beneath the
-(optional) acknowledgments\footnote{If EquinOCS, our proceedings submission
-system, is used, then the disclaimer can be provided directly in the system.},
-for example: The authors have no competing interests to declare that are
-relevant to the content of this article. Or: Author A has received research
-grants from Company W. Author B has received a speaker honorarium from
-Company X and owns stock in Company Y. Author C is a member of committee Z.
-\end{credits}
-%
-% ---- Bibliography ----
-%
-% BibTeX users should specify bibliography style 'splncs04'.
-% References will then be sorted and formatted in the correct style.
-%
-% \bibliographystyle{splncs04}
-% \bibliography{mybibliography}
-%
-\begin{thebibliography}{8}
-\bibitem{ref_article1}
-Erion Cano, Maurizio Morisio: Hybrid Recommender Systems: A Systematic Literature Review. Department of Control and Computer Engineering, Politecnico di Torino, Corso Duca degli Abruzzi, 24 - 10129 Torino
+\chapter{Resultados y Discusión}
+\section{Evaluación del Sistema}
+\subsection{Métricas de Evaluación}
+\subsection{Resultados Obtenidos}
+\section{Análisis de Resultados}
+\subsection{Precisión}
+\subsection{Diversidad}
+\subsection{Comparación con Otros Sistemas}
 
-\end{thebibliography}
+\chapter{Conclusiones y Trabajo Futuro}
+\section{Conclusiones}
+\section{Limitaciones}
+\section{Trabajo Futuro}
+
+\appendix
+\chapter{Apéndices}
+\section{Código Fuente}
+\section{Detalles Adicionales}
+
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
 \end{document}
