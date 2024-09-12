@@ -182,7 +182,7 @@ def get_recommender(user):
     svd = cornac.models.SVD()
     knn = ItemKNN(k=20, similarity='cosine')
     bpr = cornac.models.BPR(k=10, max_iter=25, learning_rate=0.01, lambda_reg=0.02)
-    hybrid = DHybrid([svd, bpr, knn], (6, 3, 1), flag=True, similar_movies=unsimilar_movies)
+    hybrid = DHybrid([svd, bpr, knn], (4, 1, 6), flag=True, similar_movies=unsimilar_movies)
     hybrid.fit(dataset)
 
     # Get recommendations for the user

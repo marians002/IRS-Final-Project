@@ -74,9 +74,9 @@ Marian S. Álvarez Suri}
 En este método, las características de las fuentes de datos de varias técnicas de recomendación se combinan en un único algoritmo de recomendación. Esto permite aprovechar la información de diferentes fuentes para generar recomendaciones más precisas.
 \chapter{Metodología}
 \section{Descripción del Sistema}
-El sistema desarrollado es un recomendador híbrido que combina múltiples modelos de recomendación con pesos específicos. Este sistema se encarga de generar recomendaciones personalizadas para los usuarios basándose en sus interacciones previas con los ítems.
+El sistema desarrollado es un recomendador híbrido que combina múltiples modelos de recomendación con pesos específicos. Este sistema se encarga de generar recomendaciones personalizadas para los usuarios basándose en sus interacciones previas con los ítems, en la similitud con otros usuarios, y en la diversidad de géneros. 
 
-\section{Datos Utilizados}
+Además, se ha implementado una funcionalidad que mejora las sugerencias finales incorporando opciones derivadas de películas con géneros distintos a los inicialmente seleccionados, enriqueciendo así las propuestas presentadas al usuario.\section{Datos Utilizados}
 Se utiliza el conjunto de datos MovieLens 100K, que contiene 100,000 calificaciones de películas realizadas por 943 usuarios sobre 1682 películas. Este conjunto de datos incluye información sobre las películas, como títulos, géneros y fechas de lanzamiento, así como las calificaciones otorgadas por los usuarios \cite{movielens}.
 
 \section{Implementación}
@@ -89,18 +89,76 @@ Se tomaron los siguientes algoritmos de recomendación de la librería cornac \c
 \end{itemize}
 
 \subsection{Integración de Técnicas}
-El sistema híbrido combina los modelos mencionados utilizando un esquema de ponderación. Los pesos asignados a cada modelo son (6, 3, 1) para SVD, BPR y ItemKNN, respectivamente. Además, se calcula la similitud entre las películas basándose en sus géneros utilizando la similitud de coseno. Esta información de similitud se utiliza para mejorar las recomendaciones, añadiendo películas no tan similares a la última película que el usuario calificó con el objetivo de lograr mayor diversidad de las recomendaciones.
+El sistema se considera híbrido porque integra algoritmos de dos paradigmas principales de recomendación: el filtrado colaborativo y el basado en contenido. Esta combinación permite aprovechar las fortalezas y mitigar las debilidades de cada enfoque individualmente, ofreciendo recomendaciones más precisas y relevantes.
+
+Para combinar los modelos mencionados utilizamos un esquema de ponderación. Los pesos asignados a cada modelo son (4, 1, 6) para SVD, BPR y ItemKNN, respectivamente. Estos pesos fueron elegidos porque recompensan positivamente a los algoritmos que mejor desempeño tuvieron individualmente al recomendar ítems novedosos.
+
+Además, se calcula la similitud entre las películas basándose en sus géneros utilizando la similitud de coseno. Esta información de similitud se utiliza para mejorar las recomendaciones, añadiendo películas no tan similares a las mejor recomendadas.
+
+
 \chapter{Resultados y Discusión}
     \section{Evaluación del Sistema}
         \subsection{Métricas de Evaluación}
-        \subsection{Resultados Obtenidos}
-    \section{Análisis de Resultados}
-        \subsection{Precisión}
-        \subsection{Diversidad}
-        \subsection{Comparación con Otros Sistemas}
 
+        Para evaluar el rendimiento del sistema de recomendación híbrido, se utilizan varias métricas estándar en el campo de los sistemas de recomendación \cite{metrics}. Estas métricas proporcionan una evaluación cuantitativa de la precisión, relevancia y diversidad de las recomendaciones generadas por el sistema, permitiendo una comparación objetiva con otros enfoques y configuraciones.
+        Las métricas empleadas se explican a continuación:
+
+        \begin{enumerate}
+            \item MAE (Mean Absolute Error): MAE mide el error promedio absoluto entre las calificaciones predichas y las calificaciones reales. Un MAE bajo indica que las predicciones del sistema están cercanas a las valoraciones reales. Se elige por su interpretabilidad directa en términos de error promedio en las predicciones.
+            \item RMSE (Root Mean Square Error): RMSE es la raíz cuadrada del error cuadrático medio. Penaliza más los errores grandes que el MAE, lo que significa que un RMSE alto indica la presencia de errores grandes en algunas predicciones. Se selecciona por su sensibilidad a los errores grandes, lo que es crucial en sistemas de recomendación donde es importante minimizar las malas recomendaciones.
+            \item Precision@10: Precision@10 mide la proporción de recomendaciones relevantes entre las top-10 recomendaciones hechas por el sistema. Una Precision@10 alta indica que la mayoría de las top-10 recomendaciones son relevantes para el usuario. Se elige para evaluar la calidad y relevancia de las recomendaciones en la parte superior de la lista, lo cual es importante desde la perspectiva del usuario, ya que los usuarios suelen prestar atención solo a las primeras recomendaciones.
+            \item Recall@10: Recall@10 mide cuántos ítems relevantes se encuentran entre las top-10 recomendaciones del sistema, respecto al total de ítems relevantes. Un Recall@10 alto indica que el sistema es capaz de identificar una gran proporción de los ítems relevantes en sus top-10 recomendaciones. Se utiliza para asegurar que el sistema no solo haga recomendaciones precisas sino que también capture una buena parte de los ítems relevantes en sus recomendaciones principales.
+            \item Novedad (para evaluar la diversidad): Aunque no es una métrica estándar como las anteriores, la novedad puede medir cuán desconocidos o nuevos son los ítems recomendados para el usuario. Se puede adaptar para evaluar la diversidad al considerar cómo de variadas son las recomendaciones entre sí. La inclusión de la novedad para evaluar la diversidad asegura que el sistema no solo recomiende ítems relevantes sino que también promueva el descubrimiento y la exploración al sugerir ítems variados y potencialmente inesperados, mejorando la experiencia del usuario.
+        \end{enumerate}
+
+
+Estas métricas fueron elegidas para proporcionar una evaluación comprensiva del sistema de recomendación, abarcando la precisión de las predicciones (MAE, RMSE), la calidad de las recomendaciones (Precision@10, Recall@10), y la capacidad del sistema para ofrecer experiencias de descubrimiento a través de recomendaciones diversas y novedosas.
+
+
+
+
+        \subsection{Resultados Obtenidos}
+
+        En esta sección, presentamos una comparativa exhaustiva de las métricas de evaluación obtenidas por los modelos empleados. La Tabla \ref{tab:metrics} resume los resultados en términos de Error Medio Absoluto (MAE), Raíz del Error Cuadrático Medio (RMSE), Precisión y Recall considerando los primeros 10 ítems recomendados (Precision@10 y Recall@10), así como el tiempo de entrenamiento y de prueba (en segundos) para cada modelo. Estos resultados nos permiten analizar la eficacia y eficiencia de cada enfoque en el contexto de nuestro sistema de recomendación híbrido comparándolos con métodos tradicionales como Factorización de Matrices (MF), BPR (Bayesian Personalized Ranking), SVD (Descomposición de Valores Singulares) y ItemKNN (K-Nearest Neighbors para ítems).
+    \begin{table}[h]
+        \centering
+        \caption{Evaluación combinada del sistema de recomendación}
+        \label{tab:metrics}
+        \begin{tabular}{lrrrrrrr}
+        \hline
+        \textbf{Modelo} & \textbf{MAE} & \textbf{RMSE} & \textbf{Precision@10} & \textbf{Recall@10} & \textbf{Novedad} \\ \hline
+        MF      & 0.7435 & 0.9023 & 0.0672 & 0.0464  & 0.02052 \\
+        BPR     & 2.1572 & 2.3603 & 0.1138 & 0.1120 & 0.00254 \\
+        SVD     & 0.7494 & 0.9084 & 0.0574 & 0.0397 & 0.02707 \\
+        ItemKNN & 0.8222 & 0.9944 & 0.0305 & 0.0176 & 0.26961 \\
+        Hybrid  & 0.7968 & 0.9476 & 0.1356 & 0.1042 & 0.32069 \\ \hline
+        \end{tabular}
+    \end{table}
+    \section{Análisis de Resultados}
+
+    \subsection{Precisión}
+    \begin{itemize}
+    \item MAE y RMSE: El sistema MF (Matrix Factorization) muestra los valores más bajos de MAE y RMSE, indicando que, en términos de error de predicción, es el más preciso. El sistema híbrido tiene un MAE y RMSE mayores que MF y SVD pero menores que BPR e ItemKNN, lo que sugiere que, aunque no es el más preciso en términos de error de predicción, supera a varios otros métodos.
+    
+    \item Precision@10: El sistema híbrido lidera con una Precision@10 de 0.1356, lo que indica que tiene la mayor proporción de recomendaciones relevantes entre las top-10 recomendaciones. Por tanto, desde la perspectiva de la precisión de las recomendaciones, el sistema híbrido es superior.
+    \end{itemize}
+    
+
+    \subsection{Diversidad}
+    Aunque la diversidad no se mide directamente, podemos inferir que un sistema con alta precisión y recall probablemente esté recomendando una gama más amplia de ítems relevantes. El sistema híbrido, al tener la Precision@10 más alta y un Recall@10 competitivo, sugiere que no solo está recomendando ítems relevantes sino que también está cubriendo una buena parte de los ítems relevantes disponibles. Esto podría interpretarse como una indicación de diversidad en las recomendaciones, especialmente en comparación con sistemas que tienen un recall más bajo.
+
+
+    \subsection{Comparación con Otros Sistemas}
+
+    \begin{itemize}
+        \item Contra MF y SVD: Aunque el sistema híbrido no supera a MF y SVD en términos de MAE y RMSE, sí ofrece mejores resultados en Precision@10. Esto sugiere que, aunque MF y SVD pueden ser más precisos en predecir las calificaciones, el sistema híbrido es más efectivo en identificar ítems relevantes para incluir en las top-10 recomendaciones.
+        \item Contra BPR e ItemKNN: El sistema híbrido supera claramente a BPR y ItemKNN en todas las métricas de precisión consideradas. Esto indica que el sistema híbrido no solo es más preciso en sus predicciones sino también en la relevancia de sus recomendaciones.
+    \end{itemize}
+        
 \chapter{Conclusiones y Trabajo Futuro}
     \section{Conclusiones}
+
+    El sistema híbrido, aunque no es el más preciso en términos de predicción de calificaciones (MAE y RMSE), demuestra ser el más efectivo en ofrecer recomendaciones relevantes (Precision@10). Además, su buen desempeño en Recall@10 sugiere que es capaz de capturar una amplia gama de ítems relevantes, lo que podría indicar una mayor diversidad en sus recomendaciones. Esto lo hace particularmente valioso en escenarios donde la relevancia y la diversidad de las recomendaciones son críticas para la experiencia del usuario.
     \section{Limitaciones}
     \section{Trabajo Futuro}
 
