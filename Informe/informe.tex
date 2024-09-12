@@ -29,69 +29,69 @@ Marian S. Álvarez Suri}
 \tableofcontents
 
 \chapter{Introducción}
-\section{Motivación}
+    \section{Motivación}
 
-Los sistemas de recomendación han emergido como uno de los pilares fundamentales en la estrategia digital de las grandes compañías a nivel mundial, transformándose en herramientas indispensables para mejorar la experiencia del usuario y maximizar la eficiencia de los servicios en línea. Empresas líderes en el sector tecnológico, como Amazon, Netflix y Spotify, han adoptado estos sistemas para ofrecer a sus usuarios recomendaciones personalizadas, lo que no solo incrementa la satisfacción y fidelidad del cliente, sino que también impulsa significativamente las ventas y el compromiso. La capacidad de estos sistemas para analizar grandes volúmenes de datos en tiempo real y predecir las preferencias de los usuarios con alta precisión les permite a las compañías estar un paso adelante, asegurando una oferta más ajustada a las necesidades y gustos de su audiencia. En un mundo cada vez más saturado de información y opciones, los sistemas de recomendación se han convertido en una herramienta clave para filtrar y personalizar el contenido, demostrando ser un recurso valioso para mantener la competitividad y liderazgo de las grandes empresas en el mercado global.
+    Los sistemas de recomendación han emergido como uno de los pilares fundamentales en la estrategia digital de las grandes compañías a nivel mundial, transformándose en herramientas indispensables para mejorar la experiencia del usuario y maximizar la eficiencia de los servicios en línea. Empresas líderes en el sector tecnológico, como Amazon, Netflix y Spotify, han adoptado estos sistemas para ofrecer a sus usuarios recomendaciones personalizadas, lo que no solo incrementa la satisfacción y fidelidad del cliente, sino que también impulsa significativamente las ventas y el compromiso. La capacidad de estos sistemas para analizar grandes volúmenes de datos en tiempo real y predecir las preferencias de los usuarios con alta precisión les permite a las compañías estar un paso adelante, asegurando una oferta más ajustada a las necesidades y gustos de su audiencia. En un mundo cada vez más saturado de información y opciones, los sistemas de recomendación se han convertido en una herramienta clave para filtrar y personalizar el contenido, demostrando ser un recurso valioso para mantener la competitividad y liderazgo de las grandes empresas en el mercado global.
 
-El proyecto en cuestión aborda la creación de un sistema de recomendación híbrido, una solución innovadora que combina las fortalezas del filtrado colaborativo y el filtrado basado en contenido para superar las limitaciones inherentes a cada uno de estos enfoques por separado. El filtrado colaborativo aprovecha las interacciones y preferencias de los usuarios para hacer recomendaciones, basándose en la premisa de que aquellos con gustos similares en el pasado tendrán intereses parecidos en el futuro. Por otro lado, el filtrado basado en contenido se centra en las características de los ítems para hacer recomendaciones, lo que permite una personalización más detallada, pero puede limitar la diversidad de las recomendaciones y reforzar la cámara de eco.
-Al integrar ambos enfoques, nuestra propuesta no solo mejora la precisión de las recomendaciones, sino que también enriquece la experiencia del usuario al ofrecer una variedad más amplia y relevante de opciones.
+    El proyecto en cuestión aborda la creación de un sistema de recomendación híbrido, una solución innovadora que combina las fortalezas del filtrado colaborativo y el filtrado basado en contenido para superar las limitaciones inherentes a cada uno de estos enfoques por separado. El filtrado colaborativo aprovecha las interacciones y preferencias de los usuarios para hacer recomendaciones, basándose en la premisa de que aquellos con gustos similares en el pasado tendrán intereses parecidos en el futuro. Por otro lado, el filtrado basado en contenido se centra en las características de los ítems para hacer recomendaciones, lo que permite una personalización más detallada, pero puede limitar la diversidad de las recomendaciones y reforzar la cámara de eco.
+    Al integrar ambos enfoques, nuestra propuesta no solo mejora la precisión de las recomendaciones, sino que también enriquece la experiencia del usuario al ofrecer una variedad más amplia y relevante de opciones.
 
-\section{Objetivos}
+    \section{Objetivos}
 
-Nuestro trabajo se distingue de otros en el campo de los sistemas de recomendación por la incorporación de un enfoque innovador que mejora la diversidad de los elementos recomendados. A diferencia de los métodos tradicionales que se centran únicamente en las preferencias explícitas del usuario, hemos añadido un conjunto de recomendaciones que no se encuentran entre las preferidas por este. Dicha estrategia no solo enriquece la experiencia del usuario al introducirle nuevos y variados contenidos, sino que también mitiga el problema de la homogeneidad en las recomendaciones, fomentando así una exploración más amplia de las opciones disponibles. 
+    Nuestro trabajo se distingue de otros en el campo de los sistemas de recomendación por la incorporación de un enfoque innovador que mejora la diversidad de los elementos recomendados. A diferencia de los métodos tradicionales que se centran únicamente en las preferencias explícitas del usuario, hemos añadido un conjunto de recomendaciones que no se encuentran entre las preferidas por este. Dicha estrategia no solo enriquece la experiencia del usuario al introducirle nuevos y variados contenidos, sino que también mitiga el problema de la homogeneidad en las recomendaciones, fomentando así una exploración más amplia de las opciones disponibles. 
 
-El objetivo general de este trabajo es desarrollar un sistema de recomendación híbrido para películas que no solo se base en las preferencias explícitas del usuario, sino que también incorpore elementos que podrían resultar atractivos a pesar de su diferencia con el historial previo o con los gustos de personas con intereses similares. Esta estrategia busca enriquecer la diversidad de las recomendaciones cinematográficas, permitiendo descubrir nuevas películas y opciones que de otro modo podrían pasar desapercibidas.
+    El objetivo general de este trabajo es desarrollar un sistema de recomendación híbrido para películas que no solo se base en las preferencias explícitas del usuario, sino que también incorpore elementos que podrían resultar atractivos a pesar de su diferencia con el historial previo o con los gustos de personas con intereses similares. Esta estrategia busca enriquecer la diversidad de las recomendaciones cinematográficas, permitiendo descubrir nuevas películas y opciones que de otro modo podrían pasar desapercibidas.
 
 
-\section{Estructura del Informe}
+    \section{Estructura del Informe}
 
 \chapter{Estado del Arte}
-\section{Sistemas de Recomendación}
-En el ámbito de los sistemas de recomendación híbridos, el estado del arte ha evolucionado significativamente, reflejando un creciente interés en superar las limitaciones de los enfoques tradicionales mediante la integración de múltiples métodos de recomendación. Según el análisis presentado en \cite{hybridRecommenderSystemReview}, los sistemas de recomendación híbridos ofrecen una solución efectiva para superar las limitaciones de los sistemas basados únicamente en filtrado colaborativo o contenido, pues han demostrado ser especialmente eficaces en abordar problemas como el arranque frío y la escasez de datos, ofreciendo recomendaciones más precisas y personalizadas. Los estudios destacan la diversidad de técnicas utilizadas para combinar diferentes enfoques, desde métodos ponderados hasta la fusión de características, mostrando una tendencia hacia la experimentación y la innovación en el campo \cite{recommendationModelsTourism} . 
-Existen varias formas de combinar estos métodos, entre las cuales destacan:
-\begin{enumerate}
-    \item Ponderación de Pesos 
-    \item Mezcla de Modelos
-    \item Sistema Híbrido Alternante
-    \item Combinación de Características
-    
-\end{enumerate}
+    \section{Sistemas de Recomendación}
+    En el ámbito de los sistemas de recomendación híbridos, el estado del arte ha evolucionado significativamente, reflejando un creciente interés en superar las limitaciones de los enfoques tradicionales mediante la integración de múltiples métodos de recomendación. Según el análisis presentado en \cite{hybridRecommenderSystemReview}, los sistemas de recomendación híbridos ofrecen una solución efectiva para superar las limitaciones de los sistemas basados únicamente en filtrado colaborativo o contenido, pues han demostrado ser especialmente eficaces en abordar problemas como el arranque frío y la escasez de datos, ofreciendo recomendaciones más precisas y personalizadas. Los estudios destacan la diversidad de técnicas utilizadas para combinar diferentes enfoques, desde métodos ponderados hasta la fusión de características, mostrando una tendencia hacia la experimentación y la innovación en el campo \cite{recommendationModelsTourism} . 
+    Existen varias formas de combinar estos métodos, entre las cuales destacan:
+    \begin{enumerate}
+        \item Ponderación de Pesos 
+        \item Mezcla de Modelos
+        \item Sistema Híbrido Alternante
+        \item Combinación de Características
+        
+    \end{enumerate}
 
 
-Estas revisiones sistemáticas subrayan la importancia de los sistemas de recomendación híbridos en el panorama actual, identificando áreas clave para la investigación futura, como la mejora de los algoritmos de fusión y la exploración de nuevas fuentes de datos para enriquecer las recomendaciones. La continua evolución de estos sistemas promete no solo mejorar la experiencia del usuario en plataformas digitales, sino también abrir nuevas vías para el avance tecnológico en la inteligencia artificial y el análisis de datos \cite{systematicReviewRecommenderSystems}.
+    Estas revisiones sistemáticas subrayan la importancia de los sistemas de recomendación híbridos en el panorama actual, identificando áreas clave para la investigación futura, como la mejora de los algoritmos de fusión y la exploración de nuevas fuentes de datos para enriquecer las recomendaciones. La continua evolución de estos sistemas promete no solo mejorar la experiencia del usuario en plataformas digitales, sino también abrir nuevas vías para el avance tecnológico en la inteligencia artificial y el análisis de datos \cite{systematicReviewRecommenderSystems}.
 
-\subsection{Filtrado Colaborativo}
-\subsection{Filtrado Basado en Contenido}
-\subsection{Sistemas de Recomendación Híbridos}
-\section{Métodos de Hibridación}
-\subsection{Ponderación de Pesos}
-En este enfoque, las recomendaciones de diferentes sistemas se combinan asignando un peso a cada una de ellas. La importancia o puntuación de cada producto se calcula a partir de los resultados obtenidos por todas las técnicas de recomendación presentes en el sistema. Un ejemplo de este tipo de hibridación es el sistema P-Tango \cite{recommendationModelsTourism}, que ajusta los pesos de acuerdo con las opiniones de los usuarios sobre los resultados mostrados.
-\subsection{Mezcla de Modelos}
-En este método, las recomendaciones provenientes de varias técnicas de recomendación se muestran al mismo tiempo. Esto permite que el usuario vea una combinación de recomendaciones basadas en diferentes enfoques, lo que puede mejorar la diversidad y la calidad de las recomendaciones.
-\subsection{Sistema Híbrido Alternante}
-Este enfoque utiliza criterios específicos para alternar entre diferentes técnicas de recomendación. Por ejemplo, primero se emplean técnicas basadas en contenido y, si no se obtienen buenos resultados, el sistema cambia a filtrado colaborativo. Esto permite que las recomendaciones sean sensibles a las fortalezas y debilidades de cada método \cite{knowledgeDiscoveryMethodology}.
-\subsection{Combinación de Características}
+    \subsection{Filtrado Colaborativo}
+    \subsection{Filtrado Basado en Contenido}
+    \subsection{Sistemas de Recomendación Híbridos}
+    \section{Métodos de Hibridación}
+        \subsection{Ponderación de Pesos}
+        En este enfoque, las recomendaciones de diferentes sistemas se combinan asignando un peso a cada una de ellas. La importancia o puntuación de cada producto se calcula a partir de los resultados obtenidos por todas las técnicas de recomendación presentes en el sistema. Un ejemplo de este tipo de hibridación es el sistema P-Tango \cite{recommendationModelsTourism}, que ajusta los pesos de acuerdo con las opiniones de los usuarios sobre los resultados mostrados.
+        \subsection{Mezcla de Modelos}
+        En este método, las recomendaciones provenientes de varias técnicas de recomendación se muestran al mismo tiempo. Esto permite que el usuario vea una combinación de recomendaciones basadas en diferentes enfoques, lo que puede mejorar la diversidad y la calidad de las recomendaciones.
+        \subsection{Sistema Híbrido Alternante}
+        Este enfoque utiliza criterios específicos para alternar entre diferentes técnicas de recomendación. Por ejemplo, primero se emplean técnicas basadas en contenido y, si no se obtienen buenos resultados, el sistema cambia a filtrado colaborativo. Esto permite que las recomendaciones sean sensibles a las fortalezas y debilidades de cada método \cite{knowledgeDiscoveryMethodology}.
+        \subsection{Combinación de Características}
 En este método, las características de las fuentes de datos de varias técnicas de recomendación se combinan en un único algoritmo de recomendación. Esto permite aprovechar la información de diferentes fuentes para generar recomendaciones más precisas.
 \chapter{Metodología}
-\section{Descripción del Sistema}
-\section{Datos Utilizados}
-\section{Implementación}
-\subsection{Algoritmos Utilizados}
-\subsection{Integración de Técnicas}
+    \section{Descripción del Sistema}
+    \section{Datos Utilizados}
+    \section{Implementación}
+        \subsection{Algoritmos Utilizados}
+        \subsection{Integración de Técnicas}
 
 \chapter{Resultados y Discusión}
-\section{Evaluación del Sistema}
-\subsection{Métricas de Evaluación}
-\subsection{Resultados Obtenidos}
-\section{Análisis de Resultados}
-\subsection{Precisión}
-\subsection{Diversidad}
-\subsection{Comparación con Otros Sistemas}
+    \section{Evaluación del Sistema}
+        \subsection{Métricas de Evaluación}
+        \subsection{Resultados Obtenidos}
+    \section{Análisis de Resultados}
+        \subsection{Precisión}
+        \subsection{Diversidad}
+        \subsection{Comparación con Otros Sistemas}
 
 \chapter{Conclusiones y Trabajo Futuro}
-\section{Conclusiones}
-\section{Limitaciones}
-\section{Trabajo Futuro}
+    \section{Conclusiones}
+    \section{Limitaciones}
+    \section{Trabajo Futuro}
 
 \appendix
 \chapter{Apéndices}
