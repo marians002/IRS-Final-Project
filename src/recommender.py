@@ -186,6 +186,12 @@ def get_recommender(user):
     hybrid.fit(dataset)
 
     # Get recommendations for the user
-    recs = hybrid.recommend(user_id=str(user), k=5)
+    recs = hybrid.recommend(user_id=str(user), k=8)
     print(recs)
+
+    print(dataset[user])
+    original_names=[]
+
+    print(get_item_names(dataset[user], movies))
+
     return get_item_names(recs, movies)

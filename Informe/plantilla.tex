@@ -1,52 +1,72 @@
-\documentclass[a4paper,12pt]{report}
-\usepackage[utf8]{inputenc}
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{hyperref}
-\usepackage{bookmark}
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.21 of 2022/01/12
+
 
 %
+\documentclass[runningheads]{llncs}
+%
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+%
+\usepackage{graphicx}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+\usepackage[spanish]{babel}
+% If you use the hyperref package, please uncomment the following two lines
+% to display URLs in blue roman font according to Springer's eBook style:
+\usepackage{color}
+\renewcommand\UrlFont{\color{blue}\rmfamily}
+\urlstyle{rm}
+%
 \begin{document}
+%
 \title{Sistema de Recomendación Híbrido}
-\author{Carlos A. Bresó Sotto \\
-Marian S. Álvarez Suri}
-
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
 \urldef{\repo}\url{https://github.com/marians002/IRS-Final-Project.git}
 
-\date{Facultad de Matemática y Computación \\ 
-           Universidad de La Habana, La Habana 
-           \\ \repo}
+\author{Marian Susana Álvarez Suri \\ Carlos Antonio Bresó Sotto \\
+ \repo}
 
-\maketitle
 
+%
+\authorrunning{M. S. Álvarez y C. A. Bresó}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+%
+\institute{Facultad de Matemática y Computación, Universidad de La Habana, Cuba}
+%
+\maketitle              
+%
+\noindent 
 \textbf{Resumen.}
-    En el ámbito de los sistemas de recomendación, los enfoques híbridos han demostrado ser altamente efectivos al combinar las fortalezas de múltiples técnicas de recomendación. Este trabajo presenta un sistema de recomendación híbrido que integra métodos basados en contenido y filtrado colaborativo para mejorar la precisión y relevancia de las recomendaciones. El sistema propuesto utiliza un modelo de filtrado colaborativo para capturar las preferencias de los usuarios a partir de sus interacciones pasadas, mientras que el enfoque basado en contenido analiza las características intrínsecas de los ítems para ofrecer recomendaciones personalizadas. La combinación de estos métodos se realiza mediante un esquema de ponderación adaptativa que ajusta la contribución de cada técnica según el contexto y el perfil del usuario. Los resultados experimentales muestran que el sistema híbrido supera a los enfoques individuales en términos de precisión y satisfacción del usuario, destacando su potencial para aplicaciones en diversas áreas como el comercio electrónico, la recomendación de películas y la educación en línea.
+Este trabajo presenta un sistema de recomendación híbrido que integra métodos basados en contenido y filtrado colaborativo para mejorar la precisión y relevancia de las recomendaciones. El sistema propuesto utiliza un modelo de filtrado colaborativo para capturar las preferencias de los usuarios a partir de sus interacciones pasadas, mientras que el enfoque basado en contenido analiza las características intrínsecas de los ítems para ofrecer recomendaciones personalizadas. La combinación de estos métodos se realiza mediante un esquema de ponderación que ajusta la contribución de cada técnica según el contexto y el perfil del usuario. Los resultados experimentales muestran que el sistema híbrido supera a los enfoques individuales en términos de precisión y diversidad.
 \\
 \\
-    \textbf{Palabras clave}: Sistema de Recomendación Híbrido, filtrado colaborativo, filtrado basado en contenido.
+\textbf{Palabras clave}: Sistema de Recomendación Híbrido $ \cdot $  Filtrado colaborativo $ \cdot $ Filtrado basado en contenido $ \cdot $ Recomendación de películas.
 
-\tableofcontents
+%
+%
+% 
+\section{Introducción}
 
-\chapter{Introducción}
-    \section{Motivación}
+Los sistemas de recomendación han emergido como uno de los pilares fundamentales en la estrategia digital de las grandes compañías a nivel mundial, transformándose en herramientas indispensables para mejorar la experiencia del usuario y maximizar la eficiencia de los servicios en línea.
 
-    Los sistemas de recomendación han emergido como uno de los pilares fundamentales en la estrategia digital de las grandes compañías a nivel mundial, transformándose en herramientas indispensables para mejorar la experiencia del usuario y maximizar la eficiencia de los servicios en línea. Empresas líderes en el sector tecnológico, como Amazon, Netflix y Spotify, han adoptado estos sistemas para ofrecer a sus usuarios recomendaciones personalizadas, lo que no solo incrementa la satisfacción y fidelidad del cliente, sino que también impulsa significativamente las ventas y el compromiso. La capacidad de estos sistemas para analizar grandes volúmenes de datos en tiempo real y predecir las preferencias de los usuarios con alta precisión les permite a las compañías estar un paso adelante, asegurando una oferta más ajustada a las necesidades y gustos de su audiencia. En un mundo cada vez más saturado de información y opciones, los sistemas de recomendación se han convertido en una herramienta clave para filtrar y personalizar el contenido, demostrando ser un recurso valioso para mantener la competitividad y liderazgo de las grandes empresas en el mercado global.
+El proyecto en cuestión aborda la creación de un sistema de recomendación híbrido para películas. Para ello se combinan las fortalezas del filtrado colaborativo y del filtrado basado en contenido con el objetivo de superar las limitaciones inherentes a cada uno de estos enfoques por separado. El filtrado colaborativo aprovecha las interacciones y preferencias de los usuarios para hacer recomendaciones, basándose en la premisa de que aquellos con gustos similares en el pasado tendrán intereses parecidos en el futuro. Por otro lado, el filtrado basado en contenido se centra en las características de los ítems para hacer recomendaciones, lo que permite una personalización más detallada, pero puede limitar la diversidad de las recomendaciones.
 
-    El proyecto en cuestión aborda la creación de un sistema de recomendación híbrido, una solución innovadora que combina las fortalezas del filtrado colaborativo y el filtrado basado en contenido para superar las limitaciones inherentes a cada uno de estos enfoques por separado. El filtrado colaborativo aprovecha las interacciones y preferencias de los usuarios para hacer recomendaciones, basándose en la premisa de que aquellos con gustos similares en el pasado tendrán intereses parecidos en el futuro. Por otro lado, el filtrado basado en contenido se centra en las características de los ítems para hacer recomendaciones, lo que permite una personalización más detallada, pero puede limitar la diversidad de las recomendaciones y reforzar la cámara de eco.
-    Al integrar ambos enfoques, nuestra propuesta no solo mejora la precisión de las recomendaciones, sino que también enriquece la experiencia del usuario al ofrecer una variedad más amplia y relevante de opciones.
+El objetivo general de este trabajo es desarrollar un sistema que no solo se base en las preferencias explícitas del usuario, sino que también incorpore elementos que podrían resultar atractivos a pesar de su diferencia con el historial previo o con los gustos de personas con intereses similares. Esta estrategia busca enriquecer la diversidad de las recomendaciones cinematográficas, permitiendo descubrir nuevas películas y opciones que de otro modo podrían pasar desapercibidas.
 
-    \section{Objetivos}
+\section{Estado del Arte}
 
-    Nuestro trabajo se distingue de otros en el campo de los sistemas de recomendación por la incorporación de un enfoque innovador que mejora la diversidad de los elementos recomendados. A diferencia de los métodos tradicionales que se centran únicamente en las preferencias explícitas del usuario, hemos añadido un conjunto de recomendaciones que no se encuentran entre las preferidas por este. Dicha estrategia no solo enriquece la experiencia del usuario al introducirle nuevos y variados contenidos, sino que también mitiga el problema de la homogeneidad en las recomendaciones, fomentando así una exploración más amplia de las opciones disponibles. 
+El estado del arte en sistemas de recomendación híbrido refleja un esfuerzo constante por mejorar la precisión, la diversidad y la personalización de las recomendaciones. A continuación, se presenta una breve revisión del desarrollo alcanzado en el campo.
 
-    El objetivo general de este trabajo es desarrollar un sistema de recomendación híbrido para películas que no solo se base en las preferencias explícitas del usuario, sino que también incorpore elementos que podrían resultar atractivos a pesar de su diferencia con el historial previo o con los gustos de personas con intereses similares. Esta estrategia busca enriquecer la diversidad de las recomendaciones cinematográficas, permitiendo descubrir nuevas películas y opciones que de otro modo podrían pasar desapercibidas.
-
-
-    \section{Estructura del Informe}
-
-\chapter{Estado del Arte}
-    \section{Sistemas de Recomendación}
-    En el ámbito de los sistemas de recomendación híbridos, el estado del arte ha evolucionado significativamente, reflejando un creciente interés en superar las limitaciones de los enfoques tradicionales mediante la integración de múltiples métodos de recomendación. Según el análisis presentado en \cite{hybridRecommenderSystemReview}, los sistemas de recomendación híbridos ofrecen una solución efectiva para superar las limitaciones de los sistemas basados únicamente en filtrado colaborativo o contenido, pues han demostrado ser especialmente eficaces en abordar problemas como el arranque frío y la escasez de datos, ofreciendo recomendaciones más precisas y personalizadas. Los estudios destacan la diversidad de técnicas utilizadas para combinar diferentes enfoques, desde métodos ponderados hasta la fusión de características, mostrando una tendencia hacia la experimentación y la innovación en el campo \cite{recommendationModelsTourism} . 
+    \subsection{Sistemas de Recomendación}
+    En el ámbito de los sistemas de recomendación híbridos, el estado del arte ha evolucionado significativamente, reflejando un creciente interés en superar las limitaciones de los enfoques tradicionales mediante la integración de múltiples métodos de recomendación. Según el análisis presentado en el artículo "Hybrid recommender systems: A systematic literature
+    review" \cite{hybridRecommenderSystemReview}, los sistemas de recomendación híbridos ofrecen una solución efectiva para superar las limitaciones de los sistemas basados únicamente en filtrado colaborativo o contenido, pues han demostrado ser especialmente eficaces en abordar problemas como el arranque frío y la escasez de datos, ofreciendo recomendaciones más precisas y personalizadas. Los estudios destacan la diversidad de técnicas utilizadas para combinar diferentes enfoques, desde métodos ponderados hasta la fusión de características, mostrando una tendencia hacia la experimentación y la innovación en el campo \cite{recommendationModelsTourism} . 
     Existen varias formas de combinar estos métodos, entre las cuales destacan:
     \begin{enumerate}
         \item Ponderación de Pesos 
@@ -71,7 +91,7 @@ Marian S. Álvarez Suri}
         Este enfoque utiliza criterios específicos para alternar entre diferentes técnicas de recomendación. Por ejemplo, primero se emplean técnicas basadas en contenido y, si no se obtienen buenos resultados, el sistema cambia a filtrado colaborativo. Esto permite que las recomendaciones sean sensibles a las fortalezas y debilidades de cada método \cite{knowledgeDiscoveryMethodology}.
         \subsection{Combinación de Características}
 En este método, las características de las fuentes de datos de varias técnicas de recomendación se combinan en un único algoritmo de recomendación. Esto permite aprovechar la información de diferentes fuentes para generar recomendaciones más precisas.
-\chapter{Metodología}
+\section{Metodología}
 \section{Descripción del Sistema}
 El sistema desarrollado es un recomendador híbrido que combina múltiples modelos de recomendación con pesos específicos. Este sistema se encarga de generar recomendaciones personalizadas para los usuarios basándose en sus interacciones previas con los ítems, en la similitud con otros usuarios, y en la diversidad de géneros. 
 
@@ -95,7 +115,7 @@ Para combinar los modelos mencionados utilizamos un esquema de ponderación. Los
 Además, se calcula la similitud entre las películas basándose en sus géneros utilizando la similitud de coseno. Esta información de similitud se utiliza para mejorar las recomendaciones, añadiendo películas no tan similares a las mejor recomendadas.
 
 
-\chapter{Resultados y Discusión}
+\section{Resultados y Discusión}
     \section{Evaluación del Sistema}
         \subsection{Métricas de Evaluación}
 
@@ -153,12 +173,15 @@ Estas métricas fueron elegidas para proporcionar una evaluación comprensiva de
         \item Contra BPR e ItemKNN: El sistema híbrido supera claramente a BPR y ItemKNN en todas las métricas de precisión consideradas, así como en la métrica de novedad. Esto indica que el sistema híbrido no solo es más preciso en sus predicciones y en la relevancia de sus recomendaciones, sino que también sobresale en ofrecer recomendaciones más diversas y novedosas, enriqueciendo la experiencia del usuario con una variedad más amplia de ítems.
     \end{itemize}
         
-\chapter{Conclusiones y Trabajo Futuro}
+\section{Conclusiones y Trabajo Futuro}
     \section{Conclusiones}
 
     El sistema híbrido, aunque no es el más preciso en términos de predicción de calificaciones (MAE y RMSE), demuestra ser el más efectivo en ofrecer recomendaciones relevantes (Precision@10). Además, su buen desempeño en Recall@10 sugiere que es capaz de capturar una amplia gama de ítems relevantes, lo que podría indicar una mayor diversidad en sus recomendaciones. Esto lo hace particularmente valioso en escenarios donde la relevancia y la diversidad de las recomendaciones son críticas para la experiencia del usuario.
     \section{Limitaciones}
     \section{Trabajo Futuro}
+
+
+% ---- Bibliography ----
 
 
 
