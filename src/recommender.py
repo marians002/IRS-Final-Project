@@ -222,3 +222,51 @@ def get_recommender(user, verbose=False):
             print(f"- {name}")
 
     return original_unsimilar_mov
+
+
+def add_user_rating(user_id, item_id, rating):
+    """
+    Adds a user rating to the dataset if it does not already exist.
+    Parameters:
+        user_id (int): The ID of the user.
+        item_id (int): The ID of the item.
+        rating (float): The rating given by the user.
+    Returns:
+        If the rating exist, the function returns without making any changes.
+    """
+    # Load the dataset
+    file_path = 'datasets/playground/u.data'
+    dataframe = pd.read_csv(file_path, sep='\t', header=None, names=['user_id', 'item_id', 'rating', 'timestamp'])
+    
+    # Check if the rating already exists
+    if ((dataframe['user_id'] == user_id) & (dataframe['item_id'] == item_id)).any():
+        return
+    
+    timestamp = int(time.time())
+    new_entry = pd.DataFrame([[user_id, item_id, rating, timestamp]], columns=['user_id', 'item_id', 'rating', 'timestamp'])
+    dataframe = pd.concat([dataframe, new_entry], ignore_index=True)
+    
+    dataframe.to_csv(file_path, sep='\t', header=False, index=False)
+
+
+def delete_user_rating(user_id, item_id):
+    """
+    Delete a user's rating for a specific item from the dataset.
+    Args:
+        user_id (int): The ID of the user.
+        item_id (int): The ID of the item.
+    Returns:
+        None: If the rating does not exist, the function returns without making any changes.
+    """
+    # Load the dataset
+    file_path = 'datasets/playground/u.data'
+    dataframe = pd.read_csv(file_path, sep='\t', header=None, names=['user_id', 'item_id', 'rating', 'timestamp'])
+    
+    # Check if the rating exists
+    if not ((dataframe['user_id'] == user_id) & (dataframe['item_id'] == item_id)).any():
+        return
+    
+    dataframe = dataframe[~((dataframe['user_id'] == user_id) & (dataframe['item_id'] == item_id))]
+    
+    dataframe.to_csv(file_path, sep='\t', header=False, index=False)
+    
