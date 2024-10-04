@@ -42,6 +42,7 @@ def get_item_names(recommended_item_ids, dataset):
             if item == int(item_id):
                 # Retrieve the title of the movie and append it to the names list
                 name = dataset[dataset['movie_id'] == int(item_id)]['title'].values[0]
+                # modify this to append the object at the beggining of the list
                 names.append(name)
 
     return names  # Return the list of item names
@@ -140,24 +141,25 @@ class DHybrid(Hybrid):
         """
         return super().score(user_idx, item_idx)
 
-    def recommend(self, user_id, k=-1, remove_seen=False, train_set=None, n=3):
+    def recommend(self, user_id, k=-1, remove_seen=False, train_set=None, n=2):
         recommendations = super().recommend(user_id, k, remove_seen, train_set)
         if self.flag:
             sim_scores = self.sim_movies[int(recommendations[0])]
-            similar_movies = [i[0] for i in sim_scores[:n]]
+            similar_movies = [i[0] for i in sim_scores[:(n + 1)]]
             recommendations = recommendations + [str(i) for i in similar_movies]
         return recommendations
 
 
-def get_recommender(user):
+def get_recommender(user, verbose=False):
     """
-    Generates item recommendations for a given user.
+    Generates movie recommendations for a given user using a hybrid recommender system.
 
     Args:
-        user (int): ID of the user.
+        user (int): The user ID for whom recommendations are to be generated.
+        verbose (bool): If True, prints detailed information about the recommendations.
 
     Returns:
-        list: List of recommended item names.
+        list: A list of recommended movie names, including both original and unsimilar movies.
     """
     # Load the MovieLens dataset
     dataset = cornac.datasets.movielens.load_feedback(fmt='UIRT')
@@ -169,7 +171,7 @@ def get_recommender(user):
                       'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
                       'Film-Noir', 'Horror', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western']
 
-    # Compute movie similarities
+    # Compute movie similarities based on genres
     genre_columns = movies.columns[5:]
     movie_genres = movies[genre_columns]
     movie_similarities = cosine_similarity(movie_genres, movie_genres)
@@ -185,13 +187,38 @@ def get_recommender(user):
     hybrid = DHybrid([svd, bpr, knn], (4, 1, 6), flag=True, similar_movies=unsimilar_movies)
     hybrid.fit(dataset)
 
+    # Personalized parameters:
+    k = 5  # Number of recommendations to generate
+    n = 3  # Number of unsimilar movies to aggregate
+
     # Get recommendations for the user
-    recs = hybrid.recommend(user_id=str(user), k=8)
-    print(recs)
+    recs = hybrid.recommend(user_id=str(user), k=k, n=n)
 
-    print(dataset[user])
-    original_names=[]
+    # Retrieve the names of the recommended movies
+    original_names = get_item_names(recs[:k], movies)
+    unsimilar_mov_names = get_item_names(recs[k:], movies)
+    original_unsimilar_mov = original_names + unsimilar_mov_names
 
-    print(get_item_names(dataset[user], movies))
+    # If verbose, print detailed information about the recommendations
+    if verbose:
+        print("User's dataset:")
+        print(dataset[user])
 
-    return get_item_names(recs, movies)
+        print("\nOriginal recommended movies:")
+        for name in original_names:
+            print(f"- {name}")
+
+        print("\nUnsimilar movies added to recommendations:")
+        for name in unsimilar_mov_names:
+            print(f"- {name}")
+
+        print("\nCombined list of original and unsimilar movies:")
+        for name in original_unsimilar_mov:
+            print(f"- {name}")
+
+        print("\nUser's favorite movies:")
+        favorite_movies = get_item_names(dataset[user], movies)
+        for name in favorite_movies:
+            print(f"- {name}")
+
+    return original_unsimilar_mov

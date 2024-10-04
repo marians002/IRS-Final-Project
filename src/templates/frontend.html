@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <title>Recommender System</title>
     <link rel="stylesheet"
@@ -24,7 +24,27 @@
         <h1 class="main-title">Movie Ocean</h1>
         <button class='get_recom_but' onclick="getRecommendations()">Get Recommendations</button>
         <ul id="recommendations" style="display: none;"></ul>
-    <div class="recommendations">
+    
+        <div class="admin-section">
+            <h2 class="add_user_head">Add New User</h2>
+            <form id="add-user-form" class="form-container">
+                <fieldset>
+                    <div class="form-group">
+                        <label for="new-user-name">User Name:</label>
+                        <input type="text" id="new-user-name" name="new-user-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-user-ratings">Ratings (comma-separated movie IDs and ratings, e.g., "1:5,2:3"):</label>
+                        <input type="text" id="new-user-ratings" name="new-user-ratings" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" onclick="addNewUser()">Add User</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        
+        <div class="recommendations">
         <div class="column">
             <h2>Top Picks</h2>
             <ul>
@@ -79,6 +99,22 @@
             alert('You have been logged out.');
         }
 
+        async function addNewUser() {
+            const userName = document.getElementById('new-user-name').value;
+            const userRatings = document.getElementById('new-user-ratings').value;
+        
+            const response = await fetch('/add_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_name: userName, user_ratings: userRatings })
+            });
+        
+            const result = await response.json();
+            alert(result.message);
+        }
+        
         async function getRecommendations() {
             if (!currentUser) {
                 alert('No user is logged in. Please select a user.');

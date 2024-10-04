@@ -17,6 +17,10 @@ def initialize_name_to_id():
         name_to_id = map_names_to_ids()
 
 
+def insert_to_database(user_name, user_ratings):
+    pass
+
+
 @app.route('/', methods=['GET'])
 def index():
     """
@@ -43,8 +47,21 @@ def recommend():
     if not user_id:
         print("Not valid user name")
         return jsonify({"error": "No user provided or user not found"}), 400
-    recommendations = get_recommender(user_id)  # Call your recommendation function
+    recommendations = get_recommender(user_id, True)  # Call your recommendation function
     return jsonify(recommendations)
+
+
+@app.route('/add_user', methods=['POST'])
+def add_user():
+    data = request.json
+    user_name = data.get('user_name')
+    user_ratings = data.get('user_ratings')
+
+    if not user_name or not user_ratings:
+        return jsonify({"message": "Invalid input"}), 400
+
+    insert_to_database(user_name, user_ratings)
+    return jsonify({"message": "User added"})
 
 
 if __name__ == '__main__':

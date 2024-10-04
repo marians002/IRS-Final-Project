@@ -45,6 +45,10 @@ li {
 li:hover {
     background-color: rgba(0, 51, 102, 0.7);
 }
+
+fieldset {
+    border:none;
+}
 .container {
     align-content: center;
     display: flex;
@@ -86,6 +90,60 @@ li:hover {
 .main-title {
     text-align: center;
 }
+/* Add this CSS to your styles.css file */
+.admin-section {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #00164961;
+    color:white;
+    font-size: 15px;
+}
+
+.form-group button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-group button:hover {
+    background-color: #0056b3;
+}
+
+.add_user_head {
+    text-align: center;
+    border: none;
+    margin-bottom: 0;
+}
+
 #logout-container {
     justify-content: space-around;
     width: fit-content;
