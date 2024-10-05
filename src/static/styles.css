@@ -90,7 +90,13 @@ fieldset {
 .main-title {
     text-align: center;
 }
-/* Add this CSS to your styles.css file */
+
+.admin-head {
+    text-align: center;
+    margin-bottom: 20px;
+    width: 60%;
+}
+
 .admin-section {
     margin: 20px 0;
     padding: 20px;
@@ -142,6 +148,23 @@ fieldset {
     text-align: center;
     border: none;
     margin-bottom: 0;
+}
+
+.buttons-toggle {
+    display: flex;
+    justify-content: space-between;
+    width: 30%;
+}
+
+.admin-section-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.toggle-form {
+    margin: 15px;
+    padding: 2%;
+    text-wrap: nowrap;
 }
 
 #logout-container {

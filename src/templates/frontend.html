@@ -26,19 +26,46 @@
         <ul id="recommendations" style="display: none;"></ul>
     
         <div class="admin-section">
-            <h2 class="add_user_head">Add New User</h2>
-            <form id="add-user-form" class="form-container">
+            <div class="admin-section-container">
+                <h2 class="admin-head">Admin Section</h2>
+                <div class="buttons-toggle">
+                    <button class='toggle-form' onclick="showAddUserForm()">Add Movie Rating</button>
+                    <button class='toggle-form' onclick="showDeleteRatingForm()">Delete Movie Rating</button>
+                </div>
+            </div>
+
+            <form id="add-user-form" class="form-container" style="display: none;">
                 <fieldset>
                     <div class="form-group">
                         <label for="new-user-name">User Name:</label>
                         <input type="text" id="new-user-name" name="new-user-name" required>
                     </div>
                     <div class="form-group">
-                        <label for="new-user-ratings">Ratings (comma-separated movie IDs and ratings, e.g., "1:5,2:3"):</label>
-                        <input type="text" id="new-user-ratings" name="new-user-ratings" required>
+                        <label for="new-movie-name">Movie Name:</label>
+                        <input type="text" id="new-movie-name" name="new-movie-name" required>
                     </div>
                     <div class="form-group">
-                        <button type="button" onclick="addNewUser()">Add User</button>
+                        <label for="new-movie-rating">Movie Rating:</label>
+                        <input type="number" id="new-movie-rating" name="new-movie-rating" min="1" max="5" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" onclick="addNewUser()">Add User or Movie Rating</button>
+                    </div>
+                </fieldset>
+            </form>
+
+            <form id="delete-rating-form" class="form-container" style="display: none;">
+                <fieldset>
+                    <div class="form-group">
+                        <label for="delete-user-name">User Name:</label>
+                        <input type="text" id="delete-user-name" name="delete-user-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="delete-movie-name">Movie Name:</label>
+                        <input type="text" id="delete-movie-name" name="delete-movie-name" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" onclick="deleteUserRating()">Delete User Rating</button>
                     </div>
                 </fieldset>
             </form>
@@ -90,6 +117,32 @@
             }
         });
 
+        function showAddUserForm() {
+            document.getElementById('add-user-form').style.display = 'block';
+            document.getElementById('delete-rating-form').style.display = 'none';
+        }
+
+        function showDeleteRatingForm() {
+            document.getElementById('add-user-form').style.display = 'none';
+            document.getElementById('delete-rating-form').style.display = 'block';
+        }
+
+        async function deleteUserRating() {
+            const userName = document.getElementById('delete-user-name').value;
+            const movieName = document.getElementById('delete-movie-name').value;
+
+            const response = await fetch('/delete_rating', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_name: userName, movie_name: movieName })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        }
+
         function logout() {
             currentUser = null;
             document.querySelector('.user-icon').style.display = 'inline';
@@ -101,16 +154,17 @@
 
         async function addNewUser() {
             const userName = document.getElementById('new-user-name').value;
-            const userRatings = document.getElementById('new-user-ratings').value;
-        
+            const movieName = document.getElementById('new-movie-name').value;
+            const movieRating = document.getElementById('new-movie-rating').value;
+
             const response = await fetch('/add_user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user_name: userName, user_ratings: userRatings })
+                body: JSON.stringify({ user_name: userName, movie_name: movieName, movie_rating: movieRating })
             });
-        
+
             const result = await response.json();
             alert(result.message);
         }

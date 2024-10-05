@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Step 1: Execute the flask conf.py file
-python3 src/flask\ conf.py &
+# Step 1: Execute the flask_conf.py file
+python3 src/flask_conf.py &
 
 # Step 2: Wait for 5 seconds
 sleep 5

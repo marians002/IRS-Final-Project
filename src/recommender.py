@@ -1,6 +1,6 @@
-import os
 import cornac
 import pandas as pd
+from utils import load_movies, print_user_info, get_item_names
 from cornac.models import ItemKNN, Recommender
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -19,33 +19,6 @@ def bayesian_avg(ratings, c, m):
     """
     bay_avg = (c * m + ratings.sum()) / (c + ratings.count())
     return round(bay_avg, 3)
-
-
-def get_item_names(recommended_item_ids, dataset):
-    """
-    Retrieves item names for the given recommended item IDs.
-
-    Args:
-        recommended_item_ids (list): List of recommended item IDs.
-        dataset (pd.DataFrame): DataFrame containing item information.
-
-    Returns:
-        list: List of item names.
-    """
-    names = []  # Initialize an empty list to store the names of recommended items
-
-    # Iterate over each movie_id in the dataset
-    for item in dataset['movie_id']:
-        # Iterate over each recommended item ID
-        for item_id in recommended_item_ids:
-            # Check if the current movie_id matches the recommended item ID
-            if item == int(item_id):
-                # Retrieve the title of the movie and append it to the names list
-                name = dataset[dataset['movie_id'] == int(item_id)]['title'].values[0]
-                # modify this to append the object at the beggining of the list
-                names.append(name)
-
-    return names  # Return the list of item names
 
 
 class Hybrid(Recommender):
@@ -125,7 +98,7 @@ class DHybrid(Hybrid):
             eval_set: Evaluation dataset (optional).
         """
         self.dataset = train_set
-        train_set_to_dataset = cornac.data.Dataset.from_uir(train_set)
+        train_set_to_dataset = cornac.data.Dataset.from_uirt(train_set)
         super().fit(train_set_to_dataset, eval_set)
 
     def score(self, user_idx, item_idx=None):
@@ -150,123 +123,55 @@ class DHybrid(Hybrid):
         return recommendations
 
 
-def get_recommender(user, verbose=False):
+def get_recommender(user, dataset, verbose=False):
     """
     Generates movie recommendations for a given user using a hybrid recommender system.
 
     Args:
-        user (int): The user ID for whom recommendations are to be generated.
-        verbose (bool): If True, prints detailed information about the recommendations.
+        user (str): The user ID for whom recommendations are to be generated.
+        dataset (list): The dataset containing user ratings.
+        verbose (bool, optional): If True, prints detailed user information. Defaults to False.
 
     Returns:
-        list: A list of recommended movie names, including both original and unsimilar movies.
+        list: A combined list of original and unsimilar movie recommendations.
     """
-    # Load the MovieLens dataset
-    dataset = cornac.datasets.movielens.load_feedback(fmt='UIRT')
+    # Load the movie dataset
+    movies = load_movies()
 
-    # Load movie information
-    file_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.item')
-    movies = pd.read_csv(file_path, sep='|', header=None, encoding='latin-1')
-    movies.columns = ['movie_id', 'title', 'release_date', 'video_release_date', 'IMDb_URL', 'unknown', 'Action',
-                      'Adventure', 'Animation', 'Children', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
-                      'Film-Noir', 'Horror', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western']
-
-    # Compute movie similarities based on genres
+    # Extract genre columns and compute cosine similarities between movies
     genre_columns = movies.columns[5:]
     movie_genres = movies[genre_columns]
     movie_similarities = cosine_similarity(movie_genres, movie_genres)
 
-    # Create a dictionary of un-similar movies
+    # Create a dictionary of unsimilar movies based on similarity scores
     unsimilar_movies = {idx: sorted(enumerate(sim), key=lambda x: x[1], reverse=False)
                         for idx, sim in enumerate(movie_similarities)}
 
-    # Initialize and fit the hybrid model
+    # Initialize recommender models
     svd = cornac.models.SVD()
     knn = ItemKNN(k=20, similarity='cosine')
     bpr = cornac.models.BPR(k=10, max_iter=25, learning_rate=0.01, lambda_reg=0.02)
+
+    # Create a hybrid recommender system
     hybrid = DHybrid([svd, bpr, knn], (4, 1, 6), flag=True, similar_movies=unsimilar_movies)
+
+    # Fit the hybrid model to the dataset
     hybrid.fit(dataset)
 
-    # Personalized parameters:
-    k = 5  # Number of recommendations to generate
-    n = 3  # Number of unsimilar movies to aggregate
+    # Number of original and unsimilar recommendations to generate
+    k = 5
+    n = 3
 
-    # Get recommendations for the user
+    # Generate recommendations for the user
     recs = hybrid.recommend(user_id=str(user), k=k, n=n)
 
-    # Retrieve the names of the recommended movies
-    original_names = get_item_names(recs[:k], movies)
-    unsimilar_mov_names = get_item_names(recs[k:], movies)
-    original_unsimilar_mov = original_names + unsimilar_mov_names
+    # Retrieve names of original and unsimilar recommended movies
+    original_recs = get_item_names(recs[:k], movies)
+    diverse_movies = get_item_names(recs[k:], movies)
+    original_and_diverse_movies = original_recs + diverse_movies
 
-    # If verbose, print detailed information about the recommendations
+    # Print detailed user information if verbose is True
     if verbose:
-        print("User's dataset:")
-        print(dataset[user])
+        print_user_info(user, dataset, original_recs, diverse_movies, original_and_diverse_movies, movies)
 
-        print("\nOriginal recommended movies:")
-        for name in original_names:
-            print(f"- {name}")
-
-        print("\nUnsimilar movies added to recommendations:")
-        for name in unsimilar_mov_names:
-            print(f"- {name}")
-
-        print("\nCombined list of original and unsimilar movies:")
-        for name in original_unsimilar_mov:
-            print(f"- {name}")
-
-        print("\nUser's favorite movies:")
-        favorite_movies = get_item_names(dataset[user], movies)
-        for name in favorite_movies:
-            print(f"- {name}")
-
-    return original_unsimilar_mov
-
-
-def add_user_rating(user_id, item_id, rating):
-    """
-    Adds a user rating to the dataset if it does not already exist.
-    Parameters:
-        user_id (int): The ID of the user.
-        item_id (int): The ID of the item.
-        rating (float): The rating given by the user.
-    Returns:
-        If the rating exist, the function returns without making any changes.
-    """
-    # Load the dataset
-    file_path = 'datasets/playground/u.data'
-    dataframe = pd.read_csv(file_path, sep='\t', header=None, names=['user_id', 'item_id', 'rating', 'timestamp'])
-    
-    # Check if the rating already exists
-    if ((dataframe['user_id'] == user_id) & (dataframe['item_id'] == item_id)).any():
-        return
-    
-    timestamp = int(time.time())
-    new_entry = pd.DataFrame([[user_id, item_id, rating, timestamp]], columns=['user_id', 'item_id', 'rating', 'timestamp'])
-    dataframe = pd.concat([dataframe, new_entry], ignore_index=True)
-    
-    dataframe.to_csv(file_path, sep='\t', header=False, index=False)
-
-
-def delete_user_rating(user_id, item_id):
-    """
-    Delete a user's rating for a specific item from the dataset.
-    Args:
-        user_id (int): The ID of the user.
-        item_id (int): The ID of the item.
-    Returns:
-        None: If the rating does not exist, the function returns without making any changes.
-    """
-    # Load the dataset
-    file_path = 'datasets/playground/u.data'
-    dataframe = pd.read_csv(file_path, sep='\t', header=None, names=['user_id', 'item_id', 'rating', 'timestamp'])
-    
-    # Check if the rating exists
-    if not ((dataframe['user_id'] == user_id) & (dataframe['item_id'] == item_id)).any():
-        return
-    
-    dataframe = dataframe[~((dataframe['user_id'] == user_id) & (dataframe['item_id'] == item_id))]
-    
-    dataframe.to_csv(file_path, sep='\t', header=False, index=False)
-    
+    return original_and_diverse_movies
