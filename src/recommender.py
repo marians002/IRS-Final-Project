@@ -3,7 +3,7 @@ import pandas as pd
 from utils import load_movies, print_user_info, get_item_names
 from cornac.models import ItemKNN, Recommender
 from sklearn.metrics.pairwise import cosine_similarity
-
+import os
 
 def bayesian_avg(ratings, c, m):
     """
@@ -137,7 +137,7 @@ def get_recommender(user, dataset, verbose=False):
     """
     # Load the movie dataset
     movies = load_movies()
-
+    
     # Extract genre columns and compute cosine similarities between movies
     genre_columns = movies.columns[5:]
     movie_genres = movies[genre_columns]

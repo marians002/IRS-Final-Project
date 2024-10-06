@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, render_template
-import cornac.datasets.movielens as movielens
+# import cornac.datasets.movielens as movielens
 from recommender import get_recommender
 # from db_manager import add_user_rating, delete_user_rating, modified_dataset
 from utils import map_names_to_ids, get_movie_id, load_movies
 import pandas as pd
 import os
+from cornac.data import Reader
 
 app = Flask(__name__)
 
@@ -31,10 +32,11 @@ def add_user_rating(user_id, movie_id, rating):
         None
     """
     global modified_dataset
-
+    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.item')
     # Load the original dataset if not already loaded
     if modified_dataset is None:
-        modified_dataset = movielens.load_feedback(fmt='UIRT')
+        modified_dataset = Reader().read(dataset_path, sep='\t')
+        # modified_dataset = movielens.load_feedback(fmt='UIRT')
 
     # Add the new rating to the dataset
     timestamp = int(pd.Timestamp.now().timestamp())
@@ -48,6 +50,10 @@ def add_user_rating(user_id, movie_id, rating):
     # Append new user ratings to the dataset
     for rating in new_user_ratings:
         modified_dataset.append(rating)
+        
+    df = pd.DataFrame(modified_dataset, columns=['user_id', 'item_id', 'rating', 'timestamp'])
+    df.to_csv(dataset_path, sep='\t', header=False, index=False)
+
     return jsonify({"message": "User rating added"})
 
 
@@ -64,9 +70,12 @@ def delete_user_rating(user_id, movie_id):
     """
     global modified_dataset
 
+    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.item')
     # Load the original dataset if not already loaded
     if modified_dataset is None:
-        modified_dataset = movielens.load_feedback(fmt='UIRT')
+        dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.item')
+        modified_dataset = Reader().read(dataset_path, sep='\t')
+        # modified_dataset = movielens.load_feedback(fmt='UIRT')
 
     # Find the rating to delete
     user_ratings = [rating for rating in modified_dataset if rating[0] == str(user_id)]
@@ -78,6 +87,9 @@ def delete_user_rating(user_id, movie_id):
     # Remove the rating from the dataset
     modified_dataset = [rating for rating in modified_dataset if
                         not (rating[0] == str(user_id) and rating[1] == str(movie_id))]
+
+    df = pd.DataFrame(modified_dataset, columns=['user_id', 'item_id', 'rating', 'timestamp'])
+    df.to_csv(dataset_path, sep='\t', header=False, index=False)
 
     return jsonify({"message": "User rating deleted"})
 
@@ -118,7 +130,10 @@ def recommend():
     if user_id is None:
         print("Not valid user name")
         return jsonify({"error": "No user provided or user not found"}), 400
-    dataset = modified_dataset if dataset_mod_flag else movielens.load_feedback(fmt='UIRT')
+    
+    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.item')
+    dataset = Reader().read(dataset_path, sep='\t')
+    #dataset = modified_dataset if dataset_mod_flag else movielens.load_feedback(fmt='UIRT')
     recommendations = get_recommender(user_id, dataset, True)  # Call your recommendation function
     return jsonify(recommendations)
 
