@@ -3,7 +3,7 @@ import pandas as pd
 from utils import load_movies, print_user_info, get_item_names
 from cornac.models import ItemKNN, Recommender
 from sklearn.metrics.pairwise import cosine_similarity
-import os
+
 
 def bayesian_avg(ratings, c, m):
     """
@@ -84,6 +84,16 @@ class DHybrid(Hybrid):
     """
 
     def __init__(self, models, weights, name="Hybrid", flag=False, similar_movies=None):
+        """
+        Initializes the DHybrid model with the given models, weights, and additional parameters.
+
+        Args:
+            models (list): List of recommender models.
+            weights (tuple): List of weights for each model.
+            name (str, optional): Name of the hybrid model. Defaults to "Hybrid".
+            flag (bool, optional): Flag to indicate whether to include similar movies in recommendations. Defaults to False.
+            similar_movies (dict, optional): Dictionary of similar movies. Defaults to None.
+        """
         super().__init__(models, weights, name)
         self.flag = flag
         self.dataset = None
@@ -115,6 +125,19 @@ class DHybrid(Hybrid):
         return super().score(user_idx, item_idx)
 
     def recommend(self, user_id, k=-1, remove_seen=False, train_set=None, n=2):
+        """
+        Generates movie recommendations for a given user.
+
+        Args:
+            user_id (str): The user ID for whom recommendations are to be generated.
+            k (int, optional): Number of recommendations to generate. Defaults to -1 (all recommendations).
+            remove_seen (bool, optional): If True, removes movies already seen by the user. Defaults to False.
+            train_set (optional): Training dataset. Defaults to None.
+            n (int, optional): Number of similar movies to include in the recommendations. Defaults to 2.
+
+        Returns:
+            list: A list of recommended movie IDs.
+        """
         recommendations = super().recommend(user_id, k, remove_seen, train_set)
         if self.flag:
             sim_scores = self.sim_movies[int(recommendations[0])]
@@ -137,7 +160,7 @@ def get_recommender(user, dataset, verbose=False):
     """
     # Load the movie dataset
     movies = load_movies()
-    
+
     # Extract genre columns and compute cosine similarities between movies
     genre_columns = movies.columns[5:]
     movie_genres = movies[genre_columns]

@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify, render_template
-# import cornac.datasets.movielens as movielens
 from recommender import get_recommender
-# from db_manager import add_user_rating, delete_user_rating, modified_dataset
-from utils import map_names_to_ids, get_movie_id, load_movies
+from utils import map_names_to_ids, get_movie_id, load_movies, load_dataset
 import pandas as pd
 import os
 from cornac.data import Reader
@@ -12,16 +10,10 @@ app = Flask(__name__)
 # Global variable to store the name-to-ID mapping
 name_to_id = {}
 
-# Global flag to indicate if the dataset has been modified
-dataset_mod_flag = False
-
-# Global variable to store the dataset
-modified_dataset = None
-
 
 def add_user_rating(user_id, movie_id, rating):
     """
-    Adds a user rating to the modified dataset.
+    Adds a new user rating to the dataset.
 
     Args:
         user_id (int): The ID of the user.
@@ -29,19 +21,16 @@ def add_user_rating(user_id, movie_id, rating):
         rating (int): The rating given by the user.
 
     Returns:
-        None
+        Response: JSON response with a success or error message.
     """
-    global modified_dataset
-    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.item')
-    # Load the original dataset if not already loaded
-    if modified_dataset is None:
-        modified_dataset = Reader().read(dataset_path, sep='\t')
-        # modified_dataset = movielens.load_feedback(fmt='UIRT')
-
+    modified_dataset = load_dataset()
     # Add the new rating to the dataset
     timestamp = int(pd.Timestamp.now().timestamp())
     user_ratings = [rating for rating in modified_dataset if rating[0] == str(user_id)]
     movie_ids_list = [rating[1] for rating in user_ratings]
+
+    print(sorted(movie_ids_list))
+    print(type(movie_id))
 
     if str(movie_id) in movie_ids_list:
         return jsonify({"message": "This movie has already been rated by the user"}), 400
@@ -50,7 +39,8 @@ def add_user_rating(user_id, movie_id, rating):
     # Append new user ratings to the dataset
     for rating in new_user_ratings:
         modified_dataset.append(rating)
-        
+
+    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.data')
     df = pd.DataFrame(modified_dataset, columns=['user_id', 'item_id', 'rating', 'timestamp'])
     df.to_csv(dataset_path, sep='\t', header=False, index=False)
 
@@ -68,15 +58,7 @@ def delete_user_rating(user_id, movie_id):
     Returns:
         Response: JSON response with a success or error message.
     """
-    global modified_dataset
-
-    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.item')
-    # Load the original dataset if not already loaded
-    if modified_dataset is None:
-        dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.item')
-        modified_dataset = Reader().read(dataset_path, sep='\t')
-        # modified_dataset = movielens.load_feedback(fmt='UIRT')
-
+    modified_dataset = load_dataset()
     # Find the rating to delete
     user_ratings = [rating for rating in modified_dataset if rating[0] == str(user_id)]
     movie_ids_list = [rating[1] for rating in user_ratings]
@@ -88,6 +70,7 @@ def delete_user_rating(user_id, movie_id):
     modified_dataset = [rating for rating in modified_dataset if
                         not (rating[0] == str(user_id) and rating[1] == str(movie_id))]
 
+    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.data')
     df = pd.DataFrame(modified_dataset, columns=['user_id', 'item_id', 'rating', 'timestamp'])
     df.to_csv(dataset_path, sep='\t', header=False, index=False)
 
@@ -122,7 +105,6 @@ def recommend():
     Returns:
         Response: JSON response containing recommendations or an error message.
     """
-
     initialize_name_to_id()  # Ensure the name-to-ID mapping is initialized
     data = request.json
     user_name = data.get('user')
@@ -130,10 +112,9 @@ def recommend():
     if user_id is None:
         print("Not valid user name")
         return jsonify({"error": "No user provided or user not found"}), 400
-    
-    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.item')
-    dataset = Reader().read(dataset_path, sep='\t')
-    #dataset = modified_dataset if dataset_mod_flag else movielens.load_feedback(fmt='UIRT')
+
+    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.data')
+    dataset = Reader().read(dataset_path, sep='\t', fmt='UIRT')
     recommendations = get_recommender(user_id, dataset, True)  # Call your recommendation function
     return jsonify(recommendations)
 
@@ -151,7 +132,6 @@ def add_user():
     Returns:
         Response: JSON response with a success or error message.
     """
-    global dataset_mod_flag
     data = request.json
     user_name = data.get('user_name')
     movie_name = data.get('movie_name')
@@ -199,9 +179,6 @@ def add_user():
     if movie_id is None:
         return jsonify({"message": "Movie not found"}), 400
 
-    # Set the flag to indicate that the dataset has been modified
-    dataset_mod_flag = True
-
     return add_user_rating(user_id, movie_id, movie_rating)
 
 
@@ -217,7 +194,6 @@ def delete_rating():
     Returns:
         Response: JSON response with a success or error message.
     """
-    global dataset_mod_flag
     data = request.json
     user_name = data.get('user_name')
     movie_name = data.get('movie_name')
@@ -240,9 +216,6 @@ def delete_rating():
     movie_id = get_movie_id(movie_name, movies)
     if movie_id is None:
         return jsonify({"message": "Movie not found"}), 400
-
-    # Set the flag to indicate that the dataset has been modified
-    dataset_mod_flag = True
 
     return delete_user_rating(user_id, movie_id)
 

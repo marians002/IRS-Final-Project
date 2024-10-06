@@ -1,6 +1,7 @@
 import os
 import re
 import pandas as pd
+from cornac.data import Reader
 
 
 def get_item_names(recommended_item_ids, dataset):
@@ -108,6 +109,18 @@ def load_movies():
                                 'Film-Noir', 'Horror', 'Musical', 'Mystery', 'Romance', 'Sci-Fi',
                                 'Thriller', 'War', 'Western'])
     return movies
+
+
+def load_dataset():
+    """
+    Loads the user rating dataset from a file.
+
+    Returns:
+        list: List of user ratings in the format (user_id, item_id, rating, timestamp).
+    """
+    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.data')
+    modified_dataset = Reader().read(dataset_path, sep='\t', fmt='UIRT')
+    return modified_dataset
 
 
 def normalize_title(title):
