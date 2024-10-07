@@ -1,3 +1,9 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -66,9 +72,9 @@ fieldset {
     cursor: pointer;
 }
 .search-bar {
-    width: 50%;
+    width: 61%;
     padding: 10px;
-    border-radius: 20px;
+    border-radius: 15px;
     border: none;
     background-color: rgba(255, 255, 255, 0.2);
     color: #ffffff;
@@ -165,6 +171,23 @@ fieldset {
     margin: 15px;
     padding: 2%;
     text-wrap: nowrap;
+}
+
+.search-results {
+    background-color: #081943;
+    overflow-y: hidden;
+    position: absolute;
+    height: 17em;
+    width: 54%;
+    padding-top: 0;
+    padding-left: 10px;
+    display: none;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+#search-bar {
+    outline: none;
 }
 
 #logout-container {

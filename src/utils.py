@@ -1,6 +1,7 @@
 import os
 import re
 import pandas as pd
+from datetime import datetime
 from cornac.data import Reader
 
 
@@ -167,3 +168,84 @@ def get_movie_id(movie_name, dataset):
     else:
         movie_id = None
     return movie_id
+
+
+def calculate_bayesian_average(v, R, m, C):
+    """
+    Calculate the Bayesian average rating for a movie.
+
+    Args:
+        v (int): Number of votes for the movie.
+        R (float): Average rating of the movie.
+        m (float): Minimum votes required to be listed in the Top Picks.
+        C (float): Mean rating across all movies.
+
+    Returns:
+        float: Bayesian average rating.
+    """
+    return (v * R + m * C) / (v + m)
+
+
+def get_top_picks(top_n=5):
+    """
+    Get the top picks movies based on Bayesian average rating.
+
+    Args:
+        top_n (int, optional): Number of top picks to return. Defaults to 5.
+
+    Returns:
+        list: List of top picks movie names.
+    """
+    # Read the u.item file
+    df = load_movies()
+    dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.data')
+
+    # Assuming we have a DataFrame `ratings` with columns ['user_id', 'movie_id', 'rating', 'timestamp']
+    ratings = pd.read_csv(dataset_path, sep='\t', names=['user_id', 'movie_id', 'rating', 'timestamp'])
+
+    # Calculate the mean rating across all movies
+    C = ratings['rating'].mean()
+
+    # Calculate the number of votes for each movie
+    movie_stats = ratings.groupby('movie_id').agg({'rating': ['mean', 'count']})
+    movie_stats.columns = ['mean_rating', 'vote_count']
+
+    # Minimum votes required to be listed in the Top Picks
+    m = movie_stats['vote_count'].quantile(0.90)
+
+    # Filter out movies with less than m votes
+    qualified_movies = movie_stats[movie_stats['vote_count'] >= m]
+
+    # Calculate Bayesian average for each qualified movie
+    qualified_movies['bayesian_avg'] = qualified_movies.apply(
+        lambda x: calculate_bayesian_average(x['vote_count'], x['mean_rating'], m, C), axis=1)
+
+    # Sort movies by Bayesian average
+    top_picks = qualified_movies.sort_values(by='bayesian_avg', ascending=False).head(top_n)
+
+    # Merge with the original movie titles
+    top_picks = top_picks.merge(df[['movie_id', 'title']], on='movie_id')
+
+    # Return only the movie names
+    return top_picks['title'].tolist()
+
+
+def get_latest_releases(top_n=5):
+    """
+    Get the latest released movies.
+
+    Args:
+        top_n (int, optional): Number of latest releases to return. Defaults to 5.
+
+    Returns:
+        list: List of latest released movie names.
+    """
+    # Read the u.item file
+    df = load_movies()
+    # Convert release_date to datetime
+    df['release_date'] = pd.to_datetime(df['release_date'], format='%d-%b-%Y', errors='coerce')
+    # Sort movies by release date
+    latest_releases = df.sort_values(by='release_date', ascending=False).head(top_n)
+
+    # Return only the movie titles
+    return latest_releases['title'].tolist()

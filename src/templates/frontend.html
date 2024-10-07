@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
     <title>Recommender System</title>
-    <link rel="stylesheet"
-          type="text/css"
-          href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-
     <header>
-        <input type="text" class="search-bar" placeholder="Search for movies...">
+        <div style="width: 100%">
+            <input type="text" class="search-bar" id="search-bar" placeholder="Search for movies...">
+            <div id="search-results" class="search-results"></div>
+        </div>
         <svg class="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
@@ -22,10 +22,10 @@
 
     <div class="container">
         <h1 class="main-title">Movie Ocean</h1>
-        <button class='get_recom_but' onclick="getRecommendations()">Get Recommendations</button>
+        <button onclick="getRecommendations()" class="get_recom_but">Get Recommendations</button>
         <ul id="recommendations" style="display: none;"></ul>
-    
-        <div class="admin-section">
+
+        <div class="admin-section" style="display: none">
             <div class="admin-section-container">
                 <h2 class="admin-head">Admin Section</h2>
                 <div class="buttons-toggle">
@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <form id="add-user-form" class="form-container" style="display: none;">
+            <form id="add-user-form" class="form-container">
                 <fieldset>
                     <div class="form-group">
                         <label for="new-user-name">User Name:</label>
@@ -70,29 +70,17 @@
                 </fieldset>
             </form>
         </div>
-        
-        <div class="recommendations">
+    </div>
+
+    <div class="recommendations">
         <div class="column">
             <h2>Top Picks</h2>
-            <ul>
-                <li>The Deep Blue</li>
-                <li>Ocean's Eleven</li>
-                <li>Finding Nemo</li>
-                <li>Aquaman</li>
-                <li>20,000 Leagues Under the Sea</li>
-            </ul>
+            <ul id="top-picks-list"></ul>
         </div>
         <div class="column">
             <h2>New Releases</h2>
-            <ul>
-                <li>Atlantis Rising</li>
-                <li>The Lighthouse</li>
-                <li>Sea of Shadows</li>
-                <li>Blue Planet III</li>
-                <li>Poseidon's Fury</li>
-            </ul>
+            <ul id="latest-rel-list"></ul>
         </div>
-    </div>
     </div>
 
 
@@ -101,15 +89,33 @@
 
         document.querySelector('.user-icon').addEventListener('click', function() {
             if (!currentUser) {
-                // const users = ['Alice', 'Bob', 'Charlie', 'Diana'];
                 currentUser = prompt('Select a user: ');
                 if (currentUser) {
-                    document.querySelector('.user-icon').style.display = 'none';
-                    document.getElementById('logout-container').style.display = 'flex';
-                    document.getElementById('logout-container').style.width = '15%';
-                    document.getElementById('current-user-name').textContent = currentUser;
-                    document.getElementById('recommendations').style.display = 'block';
-                    alert(`Welcome, ${currentUser}! Your personalized recommendations are now loaded.`);
+                    // Check if the user is valid
+                    fetch('/check_user', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ user_name: currentUser })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.valid) {
+                            document.querySelector('.user-icon').style.display = 'none';
+                            document.getElementById('logout-container').style.display = 'flex';
+                            document.getElementById('logout-container').style.width = '15%';
+                            document.getElementById('current-user-name').textContent = currentUser;
+                            document.getElementById('recommendations').style.display = 'block';
+                            alert(`Welcome, ${currentUser}! Your personalized recommendations are now loaded.`);
+                            if (currentUser === 'krl') {
+                                document.querySelector('.admin-section').style.display = 'block';
+                            }
+                        } else {
+                            alert('User not found in the database. Please try again.');
+                            currentUser = null;
+                        }
+                    });
                 } else {
                     alert('Invalid user selection. Please try again.');
                     currentUser = null;
@@ -149,6 +155,7 @@
             document.getElementById('logout-container').style.display = 'none';
             document.getElementById('recommendations').style.display = 'none';
             document.getElementById('recommendations').innerHTML = '';
+            document.querySelector('.admin-section').style.display = 'none';
             alert('You have been logged out.');
         }
 
@@ -168,7 +175,7 @@
             const result = await response.json();
             alert(result.message);
         }
-        
+
         async function getRecommendations() {
             if (!currentUser) {
                 alert('No user is logged in. Please select a user.');
@@ -194,15 +201,96 @@
             });
         }
 
-        document.querySelector('.search-bar').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const searchTerm = this.value;
-                alert(`Searching for "${searchTerm}"... Feature coming soon!`);
-                this.value = '';
+        async function showTopPicks() {
+            const response = await fetch('/top_picks', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const topPicks = await response.json();
+            console.log(topPicks); // Log the response to check its structure
+
+            const topPicksList = document.getElementById('top-picks-list');
+            topPicksList.innerHTML = '';
+            topPicks.forEach(movie => {
+                const li = document.createElement('li');
+                li.textContent = movie;
+                topPicksList.appendChild(li);
+            });
+        }
+
+        async function showLatestReleases() {
+            const response = await fetch('/latest_releases', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const latestRel = await response.json();
+            console.log(latestRel); // Log the response to check its structure
+
+            const latestRelList = document.getElementById('latest-rel-list');
+            latestRelList.innerHTML = '';
+            latestRel.forEach(movie => {
+                const li = document.createElement('li');
+                li.textContent = movie;
+                latestRelList.appendChild(li);
+            });
+        }
+
+        async function searchMovie() {
+            const searchTerm = document.querySelector('.search-bar').value.toLowerCase();
+            const searchResults = document.getElementById('search-results');
+            const searchBar = document.querySelector('.search-bar');
+
+            if (searchTerm === '') {
+                searchResults.style.display = 'none';
+                searchResults.innerHTML = '';
+                searchBar.style.borderBottomRightRadius = '15px';
+                searchBar.style.borderBottomLeftRadius = '15px';
+                searchBar.style.backgroundColor = 'rgb(255 255 255 / 20%)';
+                return;
             }
+
+            const response = await fetch('/search_movie', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ search_term: searchTerm })
+            });
+            const movies = await response.json();
+            searchResults.innerHTML = '';
+
+            if (movies.length > 0) {
+                movies.forEach(movie => {
+                    const div = document.createElement('div');
+                    div.classList.add('search-result');
+                    div.innerHTML = `<h3>${movie.title}</h3><p>Release Date: ${movie.release_date}</p><p>Genres: ${movie.genres.join(', ')}</p>`;
+                    searchResults.appendChild(div);
+                });
+                searchResults.style.display = 'block';
+                searchBar.style.borderBottomRightRadius = '0';
+                searchBar.style.borderBottomLeftRadius = '0';
+                searchBar.style.backgroundColor = '#081943';
+            } else {
+                searchResults.innerHTML = '<p>No movies found.</p>';
+                searchResults.style.display = 'block';
+                searchBar.style.borderBottomRightRadius = '0';
+                searchBar.style.borderBottomLeftRadius = '0';
+                searchBar.style.backgroundColor = '#081943';
+            }
+        }
+
+document.querySelector('.search-bar').addEventListener('input', searchMovie);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            showTopPicks();
+            showLatestReleases();
         });
 
-        // Add a subtle animation to the recommendation lists
+
         const listItems = document.querySelectorAll('li');
         listItems.forEach((item, index) => {
             item.style.animation = `fadeIn 0.5s ease-out ${index * 0.1}s both`;

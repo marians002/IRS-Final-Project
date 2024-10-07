@@ -1,24 +1,7 @@
 import cornac
-import pandas as pd
 from utils import load_movies, print_user_info, get_item_names
 from cornac.models import ItemKNN, Recommender
 from sklearn.metrics.pairwise import cosine_similarity
-
-
-def bayesian_avg(ratings, c, m):
-    """
-    Computes the Bayesian average of ratings.
-    
-    Args:
-        ratings (pd.Series): Series of ratings.
-        c (float): Mean count of ratings.
-        m (float): Mean rating.
-    
-    Returns:
-        float: Bayesian average rating.
-    """
-    bay_avg = (c * m + ratings.sum()) / (c + ratings.count())
-    return round(bay_avg, 3)
 
 
 class Hybrid(Recommender):

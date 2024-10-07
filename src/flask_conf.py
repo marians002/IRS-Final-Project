@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from recommender import get_recommender
-from utils import map_names_to_ids, get_movie_id, load_movies, load_dataset
+from utils import map_names_to_ids, get_movie_id, load_movies, load_dataset, get_top_picks, get_latest_releases
 import pandas as pd
 import os
 from cornac.data import Reader
@@ -109,9 +109,9 @@ def recommend():
     data = request.json
     user_name = data.get('user')
     user_id = name_to_id.get(user_name)
-    if user_id is None:
+    if not user_id:
         print("Not valid user name")
-        return jsonify({"error": "No user provided or user not found"}), 400
+        return jsonify({"message": "User rating deleted"}), 400
 
     dataset_path = os.path.join(os.path.dirname(__file__), 'datasets/ml-100k/u.data')
     dataset = Reader().read(dataset_path, sep='\t', fmt='UIRT')
@@ -220,6 +220,78 @@ def delete_rating():
     return delete_user_rating(user_id, movie_id)
 
 
+@app.route('/check_user', methods=['POST'])
+def check_user():
+    """
+    Checks if the user is valid.
+
+    This endpoint expects a JSON payload with the following field:
+    - user_name (str): The name of the user.
+
+    Returns:
+        Response: JSON response with a boolean indicating if the user is valid.
+    """
+    data = request.json
+    user_name = data.get('user_name')
+
+    if not user_name:
+        return jsonify({"valid": False}), 400
+
+    if not name_to_id:
+        initialize_name_to_id()
+    is_valid = user_name in name_to_id
+    return jsonify({"valid": is_valid})
+
+
+@app.route('/top_picks', methods=['GET'])
+def top_picks():
+    """
+    Endpoint to get the top picks movies.
+
+    This endpoint returns a JSON response containing the top picks movies
+    based on the Bayesian average calculation.
+
+    Returns:
+        Response: JSON response with a list of top picks movie names.
+    """
+    return jsonify(get_top_picks())
+
+
+@app.route('/latest_releases', methods=['GET'])
+def latest_releases():
+    """
+    Endpoint to get the latest releases.
+
+    This endpoint returns a JSON response containing the latest released movies
+    based on the release date from the `u.item` database.
+
+    Returns:
+        Response: JSON response with a list of latest released movie names.
+    """
+    return jsonify(get_latest_releases())
+
+
+@app.route('/search_movie', methods=['POST'])
+def search_movie():
+    search_term = request.json.get('search_term', '').lower()
+    df = load_movies()
+    df['title_lower'] = df['title'].str.lower()
+    filtered_movies = df[df['title_lower'].str.contains(search_term)]
+
+    movies = []
+    for _, row in filtered_movies.iterrows():
+        genres = [genre for genre in df.columns[5:] if row[genre] == 1]
+        movies.append({
+            'title': row['title'],
+            'release_date': row['release_date'],
+            'genres': genres
+        })
+
+    return jsonify(movies)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
 if __name__ == '__main__':
     initialize_name_to_id()  # Initialize the name-to-ID mapping when the program runs
     app.run(debug=True)
