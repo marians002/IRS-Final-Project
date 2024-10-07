@@ -72,7 +72,7 @@ fieldset {
     cursor: pointer;
 }
 .search-bar {
-    width: 61%;
+    width: 100%;
     padding: 10px;
     border-radius: 15px;
     border: none;
@@ -175,12 +175,13 @@ fieldset {
 
 .search-results {
     background-color: #081943;
-    overflow-y: hidden;
-    position: absolute;
-    height: 17em;
-    width: 54%;
+    scrollbar-color: #ece5e5 #0b1d49;
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+    height: 10em;
+    width: 100%;
     padding-top: 0;
-    padding-left: 10px;
+    padding-left: 20px;
     display: none;
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
